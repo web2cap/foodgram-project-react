@@ -1,23 +1,35 @@
 from django.conf import settings
+from django.shortcuts import get_object_or_404
 from rest_framework import filters, status, viewsets
+from rest_framework.decorators import action
 from rest_framework.response import Response
 from users.models import User
 
 from .permissions import PostOrAutorised
-from .serializers import UserSerializer, UserSignupSerializer
+from .serializers import (
+    UserInstanceSerializer,
+    UserSerializer,
+    UserSetPasswordSerializer,
+    UserSignupSerializer,
+)
 
 
 class UserViewSet(viewsets.ModelViewSet):
-    """ViewSet API управления пользователями.
-    Запросы к экземпляру осуществляются по username.
-    При обращении на /me/ пользователь дополняет/получает свою запись."""
+    """ViewSet API for user managment.
+    Requests to instance by username.
+    When referring to /me/, the user completes/gets himself."""
 
     queryset = User.objects.all()
     serializer_class = UserSerializer
+    # TODO: Check permittion
     permission_classes = (PostOrAutorised,)
     lookup_field = "username"
 
     def create(self, request, *args, **kwargs):
+        """User self-registration.
+        Uses UserSignupSerializer.
+        """
+
         serializer = UserSignupSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
             self.perform_create(serializer)
@@ -26,3 +38,27 @@ class UserViewSet(viewsets.ModelViewSet):
         return Response(
             serializer.data, status=status.HTTP_200_OK, headers=headers
         )
+
+    def retrieve(self, request, username=None):
+        """Getting a user instance by username.
+        When requested for /me/, returns the user himself."""
+
+        if username == "me":
+            username = request.user.username
+        user = get_object_or_404(self.queryset, username=username)
+
+        serializer = UserInstanceSerializer(user)
+        return Response(serializer.data)
+
+    @action(detail=False, methods=["post"])
+    def set_password(self, request):
+        """Self change password.
+        Endpoint /set_password/."""
+
+        serializer = UserSetPasswordSerializer(
+            request.user, data=request.data, partial=True
+        )
+        if serializer.is_valid(raise_exception=True):
+            self.perform_update(serializer)
+
+        return Response(status=status.HTTP_204_NO_CONTENT)

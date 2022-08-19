@@ -111,4 +111,5 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 MESSAGES = {
     "username_invalid": "This username is not allowed to be used",
+    "current_password_invalid": "Invalid current password.",
 }
