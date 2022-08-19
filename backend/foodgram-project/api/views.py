@@ -5,7 +5,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from users.models import User
 
-from .permissions import PostOrAutorised
+from .permissions import RegisterUserProfileOrAutorised
 from .serializers import (
     UserInstanceSerializer,
     UserSerializer,
@@ -21,8 +21,7 @@ class UserViewSet(viewsets.ModelViewSet):
 
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    # TODO: Check permittion
-    permission_classes = (PostOrAutorised,)
+    permission_classes = (RegisterUserProfileOrAutorised,)
     lookup_field = "username"
 
     def create(self, request, *args, **kwargs):

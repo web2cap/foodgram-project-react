@@ -1,8 +1,23 @@
 from rest_framework import permissions
 
 
-class PostOrAutorised(permissions.BasePermission):
-    """Method POST OR Autorised request"""
+class RegisterUserProfileOrAutorised(permissions.BasePermission):
+    """Permission for user viewset.
+    Allow POST to /users/ and GET to /users/{id} for unautorised.
+    Disable GET to /users/me/ for unautorised.
+    Allow GET and POST for autorised. Disable self create user for autorised.
+    """
 
     def has_permission(self, request, view):
-        return request.method == "POST" or request.user.is_authenticated
+        path_end = request.path_info.split("/")[-2]
+        print(path_end)
+        auth_allow_methods = ("GET", "POST")
+        return (
+            (
+                request.method in auth_allow_methods
+                and request.user.is_authenticated
+                and view.action != "create"
+            )
+            or (view.action == "create" and not request.user.is_authenticated)
+            or (view.action == "retrieve" and path_end != "me")
+        )
