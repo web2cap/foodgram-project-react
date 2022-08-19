@@ -25,3 +25,30 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.username
+
+
+class Subscription(models.Model):
+    follower = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name="follower",
+        verbose_name="Follower",
+    )
+    follow = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name="follow",
+        verbose_name="Follow",
+    )
+
+    class Meta:
+        verbose_name = "Subscription"
+        verbose_name_plural = "Subscriptions"
+        constraints = [
+            models.UniqueConstraint(
+                fields=["follower", "follow"], name="unique_follow"
+            )
+        ]
+
+    def __str__(self) -> str:
+        return f"{self.follower.username} on {self.follow.username}"
