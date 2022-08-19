@@ -5,7 +5,6 @@ class Ingerdient(models.Model):
     name = models.CharField(
         verbose_name="Ingerdient name",
         max_length=200,
-        unique=True,
         null=False,
         blank=False,
     )
@@ -21,6 +20,12 @@ class Ingerdient(models.Model):
         verbose_name = "Ingerdient"
         verbose_name_plural = "Ingerdients"
         ordering = ["name"]
+        constraints = [
+            models.UniqueConstraint(
+                fields=["name", "measurement_unit"],
+                name="unique_ingerdient_in_unit",
+            )
+        ]
 
     def __str__(self):
         return self.name
