@@ -2,6 +2,7 @@ from django.conf import settings
 from django.contrib.auth.hashers import check_password, make_password
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
+from ingresiens.models import Ingerdient
 from rest_framework import serializers
 from users.models import User
 
@@ -105,3 +106,11 @@ class UserSetPasswordSerializer(serializers.ModelSerializer):
 
         data["password"] = make_password(data["new_password"])
         return data
+
+
+class IngerdientSerializer(serializers.ModelSerializer):
+    """Ingredien Serializer."""
+
+    class Meta:
+        model = Ingerdient
+        fields = ("id", "name", "measurement_unit")

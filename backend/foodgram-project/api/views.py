@@ -1,12 +1,14 @@
 from django.conf import settings
 from django.shortcuts import get_object_or_404
+from ingresiens.models import Ingerdient
 from rest_framework import filters, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from users.models import User
 
-from .permissions import RegisterUserProfileOrAutorised
+from .permissions import OnlyGet, RegisterUserProfileOrAutorised
 from .serializers import (
+    IngerdientSerializer,
     UserInstanceSerializer,
     UserSerializer,
     UserSetPasswordSerializer,
@@ -61,3 +63,13 @@ class UserViewSet(viewsets.ModelViewSet):
             self.perform_update(serializer)
 
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class IngredientViewSet(viewsets.ModelViewSet):
+    """ViewSet for Ingredients.
+    Support only GET, limited by permissoun.
+    Support search bu name."""
+
+    queryset = Ingerdient.objects.all()
+    serializer_class = IngerdientSerializer
+    permission_classes = (OnlyGet,)

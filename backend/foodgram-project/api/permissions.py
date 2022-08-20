@@ -21,3 +21,10 @@ class RegisterUserProfileOrAutorised(permissions.BasePermission):
             or (view.action == "create" and not request.user.is_authenticated)
             or (view.action == "retrieve" and path_end != "me")
         )
+
+
+class OnlyGet(permissions.BasePermission):
+    """Allow only GET method."""
+
+    def has_permission(self, request, view):
+        return request.method == "GET"
