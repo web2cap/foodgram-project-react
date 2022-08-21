@@ -2,7 +2,7 @@ from django.conf import settings
 from django.contrib.auth.hashers import check_password, make_password
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
-from ingresiens.models import Ingerdient
+from ingrediens.models import Ingerdient
 from rest_framework import serializers
 from users.models import User
 

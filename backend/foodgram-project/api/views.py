@@ -1,6 +1,6 @@
 from django.conf import settings
 from django.shortcuts import get_object_or_404
-from ingresiens.models import Ingerdient
+from ingrediens.models import Ingerdient
 from rest_framework import filters, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
