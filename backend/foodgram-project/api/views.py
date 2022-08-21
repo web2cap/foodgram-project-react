@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.shortcuts import get_object_or_404
 from ingredients.models import Ingerdient
-from recipes.models import Recipe, RecipeIngredients
+from recipes.models import Recipe, Tag
 from rest_framework import filters, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -11,6 +11,7 @@ from .permissions import OnlyGet, RegisterUserProfileOrAutorised
 from .serializers import (
     IngerdientSerializer,
     RecipeSerializer,
+    TagSerializer,
     UserInstanceSerializer,
     UserSerializer,
     UserSetPasswordSerializer,
@@ -82,4 +83,13 @@ class RecipeViewSet(viewsets.ModelViewSet):
 
     queryset = Recipe.objects.all()
     serializer_class = RecipeSerializer
+    # TODO: permission
     # permission_classes = ()
+
+
+class TagViewSet(viewsets.ModelViewSet):
+    """ViewSet for Recipes."""
+
+    queryset = Tag.objects.all()
+    serializer_class = TagSerializer
+    permission_classes = (OnlyGet,)

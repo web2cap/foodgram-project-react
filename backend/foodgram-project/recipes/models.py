@@ -1,8 +1,39 @@
+from colorfield.fields import ColorField
 from django.db import models
 from ingredients.models import Ingerdient
 from users.models import User
 
 from .validators import validator_not_zero
+
+
+class Tag(models.Model):
+    name = models.CharField(
+        max_length=200,
+        verbose_name="Tag name",
+        unique=True,
+        blank=False,
+        null=False,
+    )
+    colour = ColorField(
+        verbose_name="Color",
+        unique=True,
+        null=True,
+    )
+    slug = models.SlugField(
+        verbose_name="Slug",
+        max_length=200,
+        null=True,
+        blank=False,
+        unique=True,
+    )
+
+    class Meta:
+        verbose_name = "Tag"
+        verbose_name_plural = "Tags"
+        ordering = ["name"]
+
+    def __str__(self):
+        return f"{self.name} [{self.colour}]"
 
 
 class Recipe(models.Model):
@@ -35,6 +66,12 @@ class Recipe(models.Model):
         verbose_name="Author",
         blank=False,
         null=False,
+    )
+
+    tags = models.ManyToManyField(
+        Tag,
+        verbose_name="Tags",
+        related_name="recipes",
     )
 
     class Meta:
