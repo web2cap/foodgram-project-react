@@ -1,13 +1,13 @@
 from django.db import models
-from ingrediens.models import Ingerdient
+from ingredients.models import Ingerdient
 from users.models import User
 
 from .validators import validator_not_zero
 
 
-class Resipe(models.Model):
+class Recipe(models.Model):
     name = models.CharField(
-        verbose_name="Resipe name",
+        verbose_name="Recipe name",
         max_length=200,
         null=False,
         blank=False,
@@ -38,8 +38,8 @@ class Resipe(models.Model):
     )
 
     class Meta:
-        verbose_name = "Resipe"
-        verbose_name_plural = "Resipes"
+        verbose_name = "Recipe"
+        verbose_name_plural = "Recipes"
         ordering = ["name"]
 
     def __str__(self):
@@ -54,7 +54,7 @@ class RecipeIngredients(models.Model):
         on_delete=models.CASCADE,
     )
     recipe = models.ForeignKey(
-        Resipe,
+        Recipe,
         related_name="ingredients",
         verbose_name="Recipe",
         on_delete=models.CASCADE,

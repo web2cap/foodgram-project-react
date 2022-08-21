@@ -2,7 +2,7 @@ import csv
 
 import django.db.utils
 from django.core.management.base import BaseCommand
-from ingrediens.models import Ingerdient
+from ingredients.models import Ingerdient
 
 
 class Command(BaseCommand):

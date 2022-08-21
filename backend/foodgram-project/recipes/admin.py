@@ -1,16 +1,16 @@
 from django.contrib import admin
 
-from .models import RecipeIngredients, Resipe
+from .models import Recipe, RecipeIngredients
 
 
 class RecipeIngredientsInstanceInline(admin.TabularInline):
     model = RecipeIngredients
 
 
-class ResipeAdmin(admin.ModelAdmin):
+class RecipeAdmin(admin.ModelAdmin):
     list_display = ("name", "author", "cooking_time")
     search_fields = ("name", "text")
     inlines = (RecipeIngredientsInstanceInline,)
 
 
-admin.site.register(Resipe, ResipeAdmin)
+admin.site.register(Recipe, RecipeAdmin)

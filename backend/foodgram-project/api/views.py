@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.shortcuts import get_object_or_404
-from ingrediens.models import Ingerdient
+from ingredients.models import Ingerdient
+from recipes.models import Recipe, RecipeIngredients
 from rest_framework import filters, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -9,6 +10,7 @@ from users.models import User
 from .permissions import OnlyGet, RegisterUserProfileOrAutorised
 from .serializers import (
     IngerdientSerializer,
+    RecipeSerializer,
     UserInstanceSerializer,
     UserSerializer,
     UserSetPasswordSerializer,
@@ -73,3 +75,11 @@ class IngredientViewSet(viewsets.ModelViewSet):
     queryset = Ingerdient.objects.all()
     serializer_class = IngerdientSerializer
     permission_classes = (OnlyGet,)
+
+
+class RecipeViewSet(viewsets.ModelViewSet):
+    """ViewSet for Recipes."""
+
+    queryset = Recipe.objects.all()
+    serializer_class = RecipeSerializer
+    # permission_classes = ()
