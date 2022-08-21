@@ -1,4 +1,4 @@
-from dataclasses import field
+from dataclasses import fields
 
 from django.conf import settings
 from django.contrib.auth.hashers import check_password, make_password
@@ -123,7 +123,6 @@ class RecipeSerializer(serializers.ModelSerializer):
     """Serializer for Recipe."""
 
     author = UserInstanceSerializer()
-    # ingredients = IngerdientSerializer()
 
     class Meta:
         model = Recipe
@@ -134,5 +133,6 @@ class RecipeSerializer(serializers.ModelSerializer):
             "text",
             "cooking_time",
             "author",
-            "ingredients",
+            # "ingerdients",
         )
+        fields = "__all__"
