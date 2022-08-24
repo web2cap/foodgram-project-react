@@ -7,7 +7,7 @@ from django.core.exceptions import ValidationError
 from ingredients.models import Ingerdient
 from recipes.models import Recipe, RecipeIngredients, Tag
 from rest_framework import serializers
-from users.models import User
+from users.models import Subscription, User
 
 MESSAGES = getattr(settings, "MESSAGES", None)
 
@@ -165,4 +165,37 @@ class RecipeSerializer(serializers.ModelSerializer):
             "author",
             "ingredients",
             "tags",
+        )
+
+
+class RecipeShotSerializer(serializers.ModelSerializer):
+    """Serializer for Recipe.
+    Shot infornation about recipe for Subscription list.
+    """
+
+    class Meta:
+        model = Recipe
+        fields = (
+            "id",
+            "name",
+            "image",
+            "cooking_time",
+        )
+
+
+class SubscriptionSerializer(serializers.ModelSerializer):
+    """Subscription Serializer."""
+
+    recipes = RecipeShotSerializer(many=True, read_only=True)
+    # TODO: "is_subscribed"
+
+    class Meta:
+        model = User
+        fields = (
+            "id",
+            "username",
+            "first_name",
+            "last_name",
+            "email",
+            "recipes",
         )
