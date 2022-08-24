@@ -76,6 +76,8 @@ class IngredientViewSet(viewsets.ModelViewSet):
     queryset = Ingerdient.objects.all()
     serializer_class = IngerdientSerializer
     permission_classes = (OnlyGet,)
+    filter_backends = (filters.SearchFilter,)
+    search_fields = ("^name",)
 
 
 class RecipeViewSet(viewsets.ModelViewSet):
