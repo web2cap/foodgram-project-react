@@ -13,36 +13,6 @@ MESSAGES = getattr(settings, "MESSAGES", None)
 
 
 class UserSerializer(serializers.ModelSerializer):
-    """UserSerializer."""
-
-    class Meta:
-        model = User
-        fields = (
-            "id",
-            "username",
-            "email",
-            "first_name",
-            "last_name",
-        )
-        lookup_field = "username"
-
-
-class UserInstanceSerializer(serializers.ModelSerializer):
-    """User Instance Serializer."""
-
-    class Meta:
-        model = User
-        fields = (
-            "id",
-            "username",
-            "email",
-            "first_name",
-            "last_name",
-        )
-        lookup_field = "username"
-
-
-class UserSignupSerializer(serializers.ModelSerializer):
     """New user self registration serializer.
     Disabled 'me' username.
     Maked core password validation.
@@ -148,7 +118,8 @@ class TagSerializer(serializers.ModelSerializer):
 class RecipeSerializer(serializers.ModelSerializer):
     """Serializer for Recipe."""
 
-    author = UserInstanceSerializer()
+    # author = UserInstanceSerializer()
+    author = UserSerializer()
     ingredients = RecipeIngredientsSerializer(
         source="recipe_ingredients", many=True
     )
@@ -172,6 +143,8 @@ class RecipeShotSerializer(serializers.ModelSerializer):
     """Serializer for Recipe.
     Shot infornation about recipe for Subscription list.
     """
+
+    # TODO: recipes_count
 
     class Meta:
         model = Recipe

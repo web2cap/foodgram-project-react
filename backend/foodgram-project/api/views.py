@@ -17,11 +17,11 @@ from .serializers import (
     RecipeSerializer,
     SubscriptionSerializer,
     TagSerializer,
-    UserInstanceSerializer,
     UserSerializer,
     UserSetPasswordSerializer,
-    UserSignupSerializer,
 )
+
+MESSAGES = getattr(settings, "MESSAGES", None)
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -32,14 +32,14 @@ class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = (RegisterUserProfileOrAutorised,)
-    lookup_field = "username"
+    lookup_field = "id"
 
-    def create(self, request, *args, **kwargs):
+    def create(self, request):
         """User self-registration.
         Uses UserSignupSerializer.
         """
 
-        serializer = UserSignupSerializer(data=request.data)
+        serializer = UserSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
             self.perform_create(serializer)
 
@@ -48,16 +48,18 @@ class UserViewSet(viewsets.ModelViewSet):
             serializer.data, status=status.HTTP_200_OK, headers=headers
         )
 
-    def retrieve(self, request, username=None):
-        """Getting a user instance by username.
-        When requested for /me/, returns the user himself."""
+    def retrieve(self, request, id=None):
+        """Getting a user instance by id."""
 
-        if username == "me":
-            username = request.user.username
-        user = get_object_or_404(self.queryset, username=username)
-
-        serializer = UserInstanceSerializer(user)
+        user = get_object_or_404(self.queryset, id=id)
+        serializer = UserSerializer(user)
         return Response(serializer.data)
+
+    @action(detail=False, methods=["get"])
+    def me(self, request):
+        """Getting a user self user instance."""
+
+        return self.retrieve(request=request, id=request.user.id)
 
     @action(detail=False, methods=["post"])
     def set_password(self, request):
@@ -70,6 +72,53 @@ class UserViewSet(viewsets.ModelViewSet):
         if serializer.is_valid(raise_exception=True):
             self.perform_update(serializer)
 
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+    @action(detail=False, methods=["post"])
+    def set_password(self, request):
+        """Self change password.
+        Endpoint /set_password/."""
+
+        serializer = UserSetPasswordSerializer(
+            request.user, data=request.data, partial=True
+        )
+        if serializer.is_valid(raise_exception=True):
+            self.perform_update(serializer)
+
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+    @action(detail=True, methods=["post", "delete"])
+    def subscribe(self, request, id=None):
+        """Subscribe for user if method POST.
+        Disabled subscription to self and dowble subscription.
+        Unsubscribe if method DELETE.
+        Disabled unsubscription if no subscribed."""
+
+        if int(id) == request.user.id:
+            return Response(
+                {"detail": MESSAGES["self_subscription"]},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        follow_user = get_object_or_404(User, id=id)
+        me = get_object_or_404(User, id=request.user.id)
+
+        if request._request.method == "POST":
+            if me.follower.filter(follow=follow_user).exists():
+                return Response(
+                    {"detail": MESSAGES["double_subscription"]},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+            me.follower.create(follow=follow_user)
+            serializer = SubscriptionSerializer(follow_user)
+            return Response(serializer.data)
+
+        if not me.follower.filter(follow=follow_user).exists():
+            return Response(
+                {"detail": MESSAGES["no_subscribed"]},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        me.follower.filter(follow=follow_user).delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 

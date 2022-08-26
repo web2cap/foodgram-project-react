@@ -6,6 +6,7 @@ class RegisterUserProfileOrAutorised(permissions.BasePermission):
     Allow POST to /users/ and GET to /users/{id} for unautorised.
     Disable GET to /users/me/ for unautorised.
     Allow GET and POST for autorised. Disable self create user for autorised.
+    Allow POST abd DELETE to /subscribe/ for autorised.
     """
 
     def has_permission(self, request, view):
@@ -13,7 +14,13 @@ class RegisterUserProfileOrAutorised(permissions.BasePermission):
         auth_allow_methods = ("GET", "POST")
         return (
             (
-                request.method in auth_allow_methods
+                (
+                    request.method in auth_allow_methods
+                    or (
+                        view.action == "subscribe"
+                        and request.method == "DELETE"
+                    )
+                )
                 and request.user.is_authenticated
                 and view.action != "create"
             )

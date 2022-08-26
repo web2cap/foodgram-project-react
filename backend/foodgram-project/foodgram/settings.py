@@ -116,4 +116,7 @@ MESSAGES = {
     "username_invalid": "This username is not allowed to be used",
     "current_password_invalid": "Invalid current password.",
     "greater_zero": "Value must be greater than zero",
+    "self_subscription": "Self-subscription is not allowed.",
+    "double_subscription": "Double Subscription is not allowed.",
+    "no_subscribed": "Unsubscribe error, you were not subscribed",
 }
