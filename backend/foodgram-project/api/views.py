@@ -1,5 +1,3 @@
-from multiprocessing import context
-
 from django.conf import settings
 from django.shortcuts import get_object_or_404
 from ingredients.models import Ingerdient
@@ -17,6 +15,7 @@ from .permissions import (
 from .serializers import (
     IngerdientSerializer,
     RecipeSerializer,
+    RecipeShotSerializer,
     SubscriptionSerializer,
     TagSerializer,
     UserSerializer,
@@ -138,6 +137,33 @@ class RecipeViewSet(viewsets.ModelViewSet):
     serializer_class = RecipeSerializer
     # TODO: permission
     # permission_classes = ()
+
+    @action(detail=True, methods=["post", "delete"])
+    def favorite(self, request, pk=None):
+        """Add to favorite recipe if POST method.
+        Disabled double records.
+        Delete recipe from favorite if method DELETE.
+        Disabled delete if recipe not in favorite."""
+
+        recipe = get_object_or_404(Recipe, pk=pk)
+
+        if request._request.method == "POST":
+            if recipe.favorite.filter(id=request.user.id).exists():
+                return Response(
+                    {"detail": MESSAGES["already_favorite"]},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+            recipe.favorite.add(request.user)
+            serializer = RecipeShotSerializer(recipe)
+            return Response(serializer.data)
+
+        if not recipe.favorite.filter(id=request.user.id).exists():
+            return Response(
+                {"detail": MESSAGES["not_in_favorite"]},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        recipe.favorite.remove(request.user)
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class TagViewSet(viewsets.ModelViewSet):

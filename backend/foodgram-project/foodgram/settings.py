@@ -119,4 +119,6 @@ MESSAGES = {
     "self_subscription": "Self-subscription is not allowed.",
     "double_subscription": "Double Subscription is not allowed.",
     "no_subscribed": "Unsubscribe error, you were not subscribed",
+    "already_favorite": "This recipe is already in favorite list.",
+    "not_in_favorite": "Cannot delete. This recipe is not in favorite list.",
 }

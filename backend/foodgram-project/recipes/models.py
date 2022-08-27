@@ -74,6 +74,12 @@ class Recipe(models.Model):
         related_name="recipes",
     )
 
+    favorite = models.ManyToManyField(
+        User,
+        verbose_name="Favorites",
+        related_name="favorite_recipes",
+    )
+
     class Meta:
         verbose_name = "Recipe"
         verbose_name_plural = "Recipes"

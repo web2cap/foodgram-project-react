@@ -150,7 +150,7 @@ class RecipeSerializer(serializers.ModelSerializer):
 
 class RecipeShotSerializer(serializers.ModelSerializer):
     """Serializer for Recipe.
-    Shot infornation about recipe for Subscription list.
+    Shot infornation about recipe for Subscription list and favorites.
     """
 
     class Meta:
