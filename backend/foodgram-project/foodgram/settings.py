@@ -121,4 +121,6 @@ MESSAGES = {
     "no_subscribed": "Unsubscribe error, you were not subscribed",
     "already_favorite": "This recipe is already in favorite list.",
     "not_in_favorite": "Cannot delete. This recipe is not in favorite list.",
+    "already_in_card": "This recipe is already in your card.",
+    "not_in_card": "Cannot delete. This recipe is not in your card.",
 }

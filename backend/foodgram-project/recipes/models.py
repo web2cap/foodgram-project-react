@@ -80,6 +80,12 @@ class Recipe(models.Model):
         related_name="favorite_recipes",
     )
 
+    shopping_card = models.ManyToManyField(
+        User,
+        verbose_name="In shopping card",
+        related_name="shopping_recipes",
+    )
+
     class Meta:
         verbose_name = "Recipe"
         verbose_name_plural = "Recipes"
