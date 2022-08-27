@@ -1,3 +1,5 @@
+from multiprocessing import context
+
 from django.conf import settings
 from django.shortcuts import get_object_or_404
 from ingredients.models import Ingerdient
@@ -39,6 +41,7 @@ class UserViewSet(viewsets.ModelViewSet):
         Uses UserSignupSerializer.
         """
 
+        # TODO: Check response fields
         serializer = UserSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
             self.perform_create(serializer)
@@ -48,18 +51,12 @@ class UserViewSet(viewsets.ModelViewSet):
             serializer.data, status=status.HTTP_200_OK, headers=headers
         )
 
-    def retrieve(self, request, id=None):
-        """Getting a user instance by id."""
-
-        user = get_object_or_404(self.queryset, id=id)
-        serializer = UserSerializer(user)
-        return Response(serializer.data)
-
     @action(detail=False, methods=["get"])
     def me(self, request):
         """Getting a user self user instance."""
 
-        return self.retrieve(request=request, id=request.user.id)
+        serializer = UserSerializer(request.user, context={"request": request})
+        return Response(serializer.data)
 
     @action(detail=False, methods=["post"])
     def set_password(self, request):
@@ -162,5 +159,4 @@ class SubscriptionViewSet(viewsets.ModelViewSet):
             "follow"
         )
         subscription = User.objects.filter(id__in=followed_people)
-
         return subscription

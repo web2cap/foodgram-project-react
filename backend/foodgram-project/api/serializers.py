@@ -1,5 +1,3 @@
-from dataclasses import fields
-
 from django.conf import settings
 from django.contrib.auth.hashers import check_password, make_password
 from django.contrib.auth.password_validation import validate_password
@@ -7,7 +5,7 @@ from django.core.exceptions import ValidationError
 from ingredients.models import Ingerdient
 from recipes.models import Recipe, RecipeIngredients, Tag
 from rest_framework import serializers
-from users.models import Subscription, User
+from users.models import User
 
 MESSAGES = getattr(settings, "MESSAGES", None)
 
@@ -18,6 +16,8 @@ class UserSerializer(serializers.ModelSerializer):
     Maked core password validation.
     """
 
+    is_subscribed = serializers.SerializerMethodField()
+
     class Meta:
         model = User
         fields = (
@@ -27,6 +27,7 @@ class UserSerializer(serializers.ModelSerializer):
             "first_name",
             "last_name",
             "email",
+            "is_subscribed",
         )
         extra_kwargs = {
             "password": {"write_only": True},
@@ -38,12 +39,21 @@ class UserSerializer(serializers.ModelSerializer):
         return value
 
     def validate_password(self, value):
-
         try:
             validate_password(value)
         except ValidationError as exc:
             raise serializers.ValidationError(str(exc))
         return make_password(value)
+
+    def get_is_subscribed(self, obj):
+        request = self.context.get("request")
+        if request and hasattr(request, "user"):
+            if (
+                request.user.is_authenticated
+                and request.user.follower.filter(follow=obj).exists()
+            ):
+                return True
+        return False
 
 
 class UserSetPasswordSerializer(serializers.ModelSerializer):
@@ -118,7 +128,6 @@ class TagSerializer(serializers.ModelSerializer):
 class RecipeSerializer(serializers.ModelSerializer):
     """Serializer for Recipe."""
 
-    # author = UserInstanceSerializer()
     author = UserSerializer()
     ingredients = RecipeIngredientsSerializer(
         source="recipe_ingredients", many=True
@@ -144,8 +153,6 @@ class RecipeShotSerializer(serializers.ModelSerializer):
     Shot infornation about recipe for Subscription list.
     """
 
-    # TODO: recipes_count
-
     class Meta:
         model = Recipe
         fields = (
@@ -160,7 +167,7 @@ class SubscriptionSerializer(serializers.ModelSerializer):
     """Subscription Serializer."""
 
     recipes = RecipeShotSerializer(many=True, read_only=True)
-    # TODO: "is_subscribed"
+    is_subscribed = serializers.SerializerMethodField()
 
     class Meta:
         model = User
@@ -171,4 +178,8 @@ class SubscriptionSerializer(serializers.ModelSerializer):
             "last_name",
             "email",
             "recipes",
+            "is_subscribed",
         )
+
+    def get_is_subscribed(self, obj):
+        return True
