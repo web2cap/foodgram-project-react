@@ -167,7 +167,6 @@ class RecipeViewSet(viewsets.ModelViewSet):
 
     @action(detail=True, methods=["post", "delete"])
     def shopping_cart(self, request, pk=None):
-        # http://localhost/api/recipes/{id}/shopping_cart/
         """Add to user shopping card recipe if POST method.
         Disabled double records.
         Delete recipe from shopping card if method DELETE.

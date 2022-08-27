@@ -134,6 +134,7 @@ class RecipeSerializer(serializers.ModelSerializer):
     )
     tags = TagSerializer(many=True, read_only=True)
     is_favorited = serializers.SerializerMethodField()
+    is_in_shopping_cart = serializers.SerializerMethodField()
 
     class Meta:
         model = Recipe
@@ -147,6 +148,7 @@ class RecipeSerializer(serializers.ModelSerializer):
             "ingredients",
             "tags",
             "is_favorited",
+            "is_in_shopping_cart",
         )
 
     def get_is_favorited(self, obj):
@@ -155,6 +157,16 @@ class RecipeSerializer(serializers.ModelSerializer):
             if (
                 request.user.is_authenticated
                 and obj.favorite.filter(id=request.user.id).exists()
+            ):
+                return True
+        return False
+
+    def get_is_in_shopping_cart(self, obj):
+        request = self.context.get("request")
+        if request and hasattr(request, "user"):
+            if (
+                request.user.is_authenticated
+                and obj.shopping_card.filter(id=request.user.id).exists()
             ):
                 return True
         return False
