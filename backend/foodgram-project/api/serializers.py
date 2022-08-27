@@ -133,6 +133,7 @@ class RecipeSerializer(serializers.ModelSerializer):
         source="recipe_ingredients", many=True
     )
     tags = TagSerializer(many=True, read_only=True)
+    is_favorited = serializers.SerializerMethodField()
 
     class Meta:
         model = Recipe
@@ -145,7 +146,18 @@ class RecipeSerializer(serializers.ModelSerializer):
             "author",
             "ingredients",
             "tags",
+            "is_favorited",
         )
+
+    def get_is_favorited(self, obj):
+        request = self.context.get("request")
+        if request and hasattr(request, "user"):
+            if (
+                request.user.is_authenticated
+                and obj.favorite.filter(id=request.user.id).exists()
+            ):
+                return True
+        return False
 
 
 class RecipeShotSerializer(serializers.ModelSerializer):
