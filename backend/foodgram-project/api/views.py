@@ -1,3 +1,5 @@
+from ast import main
+
 from django.conf import settings
 from django.shortcuts import get_object_or_404
 from ingredients.models import Ingerdient
@@ -138,59 +140,55 @@ class RecipeViewSet(viewsets.ModelViewSet):
     # TODO: permission
     # permission_classes = ()
 
+    def add_remove_m2m_relation(
+        self, request, model_main, model_mgr, pk, serializer_class
+    ):
+        """Add many to many relation to user model if POST method.
+        Disabled double records.
+        Delete many to many relation if method DELETE.
+        Disabled delete if relation doesn't exists.
+        """
+
+        main = get_object_or_404(model_main, pk=pk)
+        manager = getattr(main, model_mgr)
+
+        if request._request.method == "POST":
+            if manager.filter(id=request.user.id).exists():
+                return Response(
+                    {"detail": MESSAGES["relation_already_exists"]},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+            manager.add(request.user)
+            serializer = serializer_class(main)
+            return Response(serializer.data)
+
+        if not manager.filter(id=request.user.id).exists():
+            return Response(
+                {"detail": MESSAGES["relation_not_exists"]},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        manager.remove(request.user)
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
     @action(detail=True, methods=["post", "delete"])
     def favorite(self, request, pk=None):
         """Add to favorite recipe if POST method.
-        Disabled double records.
         Delete recipe from favorite if method DELETE.
-        Disabled delete if recipe not in favorite."""
+        """
 
-        recipe = get_object_or_404(Recipe, pk=pk)
-
-        if request._request.method == "POST":
-            if recipe.favorite.filter(id=request.user.id).exists():
-                return Response(
-                    {"detail": MESSAGES["already_favorite"]},
-                    status=status.HTTP_400_BAD_REQUEST,
-                )
-            recipe.favorite.add(request.user)
-            serializer = RecipeShotSerializer(recipe)
-            return Response(serializer.data)
-
-        if not recipe.favorite.filter(id=request.user.id).exists():
-            return Response(
-                {"detail": MESSAGES["not_in_favorite"]},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-        recipe.favorite.remove(request.user)
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        return self.add_remove_m2m_relation(
+            request, Recipe, "favorite", pk, RecipeShotSerializer
+        )
 
     @action(detail=True, methods=["post", "delete"])
     def shopping_cart(self, request, pk=None):
         """Add to user shopping card recipe if POST method.
-        Disabled double records.
         Delete recipe from shopping card if method DELETE.
-        Disabled delete if recipe not in shopping card."""
+        """
 
-        recipe = get_object_or_404(Recipe, pk=pk)
-
-        if request._request.method == "POST":
-            if recipe.shopping_card.filter(id=request.user.id).exists():
-                return Response(
-                    {"detail": MESSAGES["already_in_card"]},
-                    status=status.HTTP_400_BAD_REQUEST,
-                )
-            recipe.shopping_card.add(request.user)
-            serializer = RecipeShotSerializer(recipe)
-            return Response(serializer.data)
-
-        if not recipe.shopping_card.filter(id=request.user.id).exists():
-            return Response(
-                {"detail": MESSAGES["not_in_card"]},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-        recipe.shopping_card.remove(request.user)
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        return self.add_remove_m2m_relation(
+            request, Recipe, "shopping_card", pk, RecipeShotSerializer
+        )
 
 
 class TagViewSet(viewsets.ModelViewSet):

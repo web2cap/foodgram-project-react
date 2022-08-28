@@ -119,8 +119,6 @@ MESSAGES = {
     "self_subscription": "Self-subscription is not allowed.",
     "double_subscription": "Double Subscription is not allowed.",
     "no_subscribed": "Unsubscribe error, you were not subscribed",
-    "already_favorite": "This recipe is already in favorite list.",
-    "not_in_favorite": "Cannot delete. This recipe is not in favorite list.",
-    "already_in_card": "This recipe is already in your card.",
-    "not_in_card": "Cannot delete. This recipe is not in your card.",
+    "relation_already_exists": "This relation is already exists.",
+    "relation_not_exists": "Cannot delete. This relation doesn't exist.",
 }
