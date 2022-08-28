@@ -78,12 +78,14 @@ class Recipe(models.Model):
         User,
         verbose_name="Favorites",
         related_name="favorite_recipes",
+        blank=True,
     )
 
     shopping_card = models.ManyToManyField(
         User,
         verbose_name="In shopping card",
         related_name="shopping_recipes",
+        blank=True,
     )
 
     class Meta:
