@@ -1,7 +1,6 @@
-from ast import main
-
 from django.conf import settings
 from django.shortcuts import get_object_or_404
+from django_filters.rest_framework import DjangoFilterBackend
 from ingredients.models import Ingerdient
 from recipes.models import Recipe, Tag
 from rest_framework import filters, status, viewsets
@@ -137,6 +136,8 @@ class RecipeViewSet(viewsets.ModelViewSet):
 
     queryset = Recipe.objects.all()
     serializer_class = RecipeSerializer
+    filter_backends = (DjangoFilterBackend,)
+    filterset_fields = ("tags",)
     # TODO: permission
     # permission_classes = ()
 
