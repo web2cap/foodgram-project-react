@@ -42,3 +42,17 @@ class OnlyGetAutorised(permissions.BasePermission):
     def has_permission(self, request, view):
 
         return request.method == "GET" and request.user.is_authenticated
+
+
+class GetOrGPPDAutorized(permissions.BasePermission):
+    """Allow GET for all.
+    Allow POST, PATCH and DELETE for autorized."""
+
+    def has_permission(self, request, view):
+
+        auth_allow_methods = ("GET", "POST", "PATCH", "DELETE")
+
+        return request.method == "GET" or (
+            request.user.is_authenticated
+            and request.method in auth_allow_methods
+        )
