@@ -1,14 +1,21 @@
 import os
-from datetime import timedelta
 from pathlib import Path
+
+DEBUG = True
+
+if DEBUG == True:
+    from dotenv import load_dotenv
+
+    load_dotenv()
+
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = (
-    "django-insecure-7mp(x1xh58&fca)$&+4=**gc^q@#u)l3v9ey3jvthld(&4tngi"
+SECRET_KEY = os.getenv(
+    "ST_SECRET_KEY",
+    default="p&l%385148kslhtyn^##a1)ilz@4zqj=rq&agdol^##zgl9(vs",
 )
 
-DEBUG = True
 
 ALLOWED_HOSTS = []
 
@@ -63,8 +70,15 @@ WSGI_APPLICATION = "foodgram.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "ENGINE": os.getenv(
+            "DB_ENGINE",
+            default="django.db.backends.postgresql",
+        ),
+        "NAME": os.getenv("DB_NAME", default="foodgram"),
+        "USER": os.getenv("DB_USER", default="foodgram"),
+        "PASSWORD": os.getenv("DB_PASSWORD", default="foodgram"),
+        "HOST": os.getenv("DB_HOST", default="db"),
+        "PORT": os.getenv("DB_PORT", default="5432"),
     }
 }
 
@@ -109,7 +123,11 @@ USE_I18N = True
 
 USE_TZ = True
 
-STATIC_URL = "static/"
+STATIC_URL = "/static/"
+STATIC_ROOT = os.path.join(BASE_DIR, "static")
+
+MEDIA_URL = "/media/"
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 

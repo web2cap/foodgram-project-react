@@ -2,6 +2,8 @@ from django.conf import settings
 from django.contrib.auth.hashers import check_password, make_password
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
+from django.shortcuts import get_object_or_404
+from drf_extra_fields.fields import Base64ImageField
 from ingredients.models import Ingerdient
 from recipes.models import Recipe, RecipeIngredients, Tag
 from rest_framework import serializers
@@ -101,7 +103,7 @@ class IngerdientSerializer(serializers.ModelSerializer):
 
 class RecipeIngredientsSerializer(serializers.HyperlinkedModelSerializer):
 
-    id = serializers.ReadOnlyField(source="ingredient.id")
+    id = serializers.IntegerField(source="ingredient.id")
     name = serializers.ReadOnlyField(source="ingredient.name")
     measurement_unit = serializers.ReadOnlyField(
         source="ingredient.measurement_unit"
@@ -128,13 +130,16 @@ class TagSerializer(serializers.ModelSerializer):
 class RecipeSerializer(serializers.ModelSerializer):
     """Serializer for Recipe."""
 
-    author = UserSerializer()
+    author = UserSerializer(required=False)
     ingredients = RecipeIngredientsSerializer(
-        source="recipe_ingredients", many=True
+        source="recipe_ingredients",
+        many=True,
     )
     tags = TagSerializer(many=True, read_only=True)
+    tag_list = serializers.ListField(write_only=True)
     is_favorited = serializers.SerializerMethodField()
     is_in_shopping_cart = serializers.SerializerMethodField()
+    image = Base64ImageField()
 
     class Meta:
         model = Recipe
@@ -147,9 +152,29 @@ class RecipeSerializer(serializers.ModelSerializer):
             "author",
             "ingredients",
             "tags",
+            "tag_list",
             "is_favorited",
             "is_in_shopping_cart",
         )
+
+    def create(self, validated_data):
+
+        validated_data["author"] = self.context["request"].user
+        recipe_ingredients = validated_data.pop("recipe_ingredients")
+        tag_list = validated_data.pop("tag_list")
+        instance = Recipe.objects.create(**validated_data)
+        for ingrow in recipe_ingredients:
+            ingredient = get_object_or_404(
+                Ingerdient, id=ingrow["ingredient"]["id"]
+            )
+            instance.recipe_ingredients.create(
+                ingredient=ingredient, amount=ingrow["amount"]
+            )
+        for tagid in tag_list:
+            tag = get_object_or_404(Tag, id=tagid)
+            instance.tags.add(tag)
+
+        return instance
 
     def get_is_favorited(self, obj):
         request = self.context.get("request")
