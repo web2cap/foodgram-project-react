@@ -140,4 +140,5 @@ MESSAGES = {
     "no_subscribed": "Unsubscribe error, you were not subscribed",
     "relation_already_exists": "This relation is already exists.",
     "relation_not_exists": "Cannot delete. This relation doesn't exist.",
+    "patch_only_author": "Update recipe can only author or admin.",
 }
