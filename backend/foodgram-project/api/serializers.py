@@ -4,7 +4,7 @@ from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 from django.shortcuts import get_object_or_404
 from drf_extra_fields.fields import Base64ImageField
-from ingredients.models import Ingerdient
+from ingredients.models import Ingredient
 from recipes.models import Recipe, RecipeIngredients, Tag
 from rest_framework import serializers, status
 from users.models import User
@@ -95,11 +95,11 @@ class UserSetPasswordSerializer(serializers.ModelSerializer):
         return data
 
 
-class IngerdientSerializer(serializers.ModelSerializer):
+class IngredientSerializer(serializers.ModelSerializer):
     """Ingredien Serializer."""
 
     class Meta:
-        model = Ingerdient
+        model = Ingredient
         fields = ("id", "name", "measurement_unit")
 
 
@@ -167,7 +167,7 @@ class RecipeSerializer(serializers.ModelSerializer):
         instance = Recipe.objects.create(**validated_data)
         for ingrow in recipe_ingredients:
             ingredient = get_object_or_404(
-                Ingerdient, id=ingrow["ingredient"]["id"]
+                Ingredient, id=ingrow["ingredient"]["id"]
             )
             instance.recipe_ingredients.create(
                 ingredient=ingredient, amount=ingrow["amount"]
@@ -193,7 +193,7 @@ class RecipeSerializer(serializers.ModelSerializer):
         instance.recipe_ingredients.all().delete()
         for ingrow in recipe_ingredients:
             ingredient = get_object_or_404(
-                Ingerdient, id=ingrow["ingredient"]["id"]
+                Ingredient, id=ingrow["ingredient"]["id"]
             )
             instance.recipe_ingredients.create(
                 ingredient=ingredient, amount=ingrow["amount"]

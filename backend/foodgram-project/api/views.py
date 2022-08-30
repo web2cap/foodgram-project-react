@@ -3,7 +3,7 @@ import datetime
 from django.conf import settings
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
-from ingredients.models import Ingerdient
+from ingredients.models import Ingredient
 from recipes.models import Recipe, Tag
 from rest_framework import filters, status, viewsets
 from rest_framework.decorators import action
@@ -17,7 +17,7 @@ from .permissions import (
     RegisterUserProfileOrAutorised,
 )
 from .serializers import (
-    IngerdientSerializer,
+    IngredientSerializer,
     RecipeSerializer,
     RecipeShotSerializer,
     SubscriptionSerializer,
@@ -129,8 +129,8 @@ class IngredientViewSet(viewsets.ModelViewSet):
     Support only GET, limited by permissoun.
     Support search bu name."""
 
-    queryset = Ingerdient.objects.all()
-    serializer_class = IngerdientSerializer
+    queryset = Ingredient.objects.all()
+    serializer_class = IngredientSerializer
     permission_classes = (OnlyGet,)
     filter_backends = (filters.SearchFilter,)
     search_fields = ("^name",)

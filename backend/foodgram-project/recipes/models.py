@@ -1,6 +1,6 @@
 from colorfield.fields import ColorField
 from django.db import models
-from ingredients.models import Ingerdient
+from ingredients.models import Ingredient
 from users.models import User
 
 from .validators import validator_not_zero
@@ -99,9 +99,9 @@ class Recipe(models.Model):
 
 class RecipeIngredients(models.Model):
     ingredient = models.ForeignKey(
-        Ingerdient,
+        Ingredient,
         related_name="recipe_ingredients",
-        verbose_name="Ingerdients",
+        verbose_name="Ingredients",
         on_delete=models.CASCADE,
     )
     recipe = models.ForeignKey(

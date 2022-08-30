@@ -1,9 +1,9 @@
 from django.db import models
 
 
-class Ingerdient(models.Model):
+class Ingredient(models.Model):
     name = models.CharField(
-        verbose_name="Ingerdient name",
+        verbose_name="Ingredient name",
         max_length=200,
         null=False,
         blank=False,
@@ -17,13 +17,13 @@ class Ingerdient(models.Model):
     )
 
     class Meta:
-        verbose_name = "Ingerdient"
-        verbose_name_plural = "Ingerdients"
+        verbose_name = "Ingredient"
+        verbose_name_plural = "Ingredients"
         ordering = ["name"]
         constraints = [
             models.UniqueConstraint(
                 fields=["name", "measurement_unit"],
-                name="unique_ingerdient_in_unit",
+                name="unique_ingredient_in_unit",
             )
         ]
 

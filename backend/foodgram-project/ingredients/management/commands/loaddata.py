@@ -2,7 +2,7 @@ import csv
 
 import django.db.utils
 from django.core.management.base import BaseCommand
-from ingredients.models import Ingerdient
+from ingredients.models import Ingredient
 
 
 class Command(BaseCommand):
@@ -16,7 +16,7 @@ class Command(BaseCommand):
             )
             for row in freader:
                 try:
-                    Ingerdient.objects.get_or_create(
+                    Ingredient.objects.get_or_create(
                         name=row["name"],
                         measurement_unit=row["measurement_unit"],
                     )
