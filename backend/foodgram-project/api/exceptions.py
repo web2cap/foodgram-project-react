@@ -3,7 +3,6 @@ from rest_framework import exceptions, status
 
 class CustomAPIException(exceptions.APIException):
     status_code = status.HTTP_400_BAD_REQUEST
-    # default_code = "error"
 
     def __init__(self, detail, status_code):
         self.detail = detail

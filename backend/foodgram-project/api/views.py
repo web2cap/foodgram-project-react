@@ -46,7 +46,6 @@ class UserViewSet(viewsets.ModelViewSet):
         Uses UserSignupSerializer.
         """
 
-        # TODO: Check response fields
         serializer = UserSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
             self.perform_create(serializer)
