@@ -1,35 +1,47 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
 <html>
-    <head>
-        <title>My Title</title>
+    <head> 
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"> 
+        <title>Shopping list for today</title>
         <style type="text/css">
+            @font-face { 
+                font-family: Arial; src: url("/media/font/arial.ttf"); 
+            }
+            body{
+                font-family: Arial;
+            }
             @page {
                 size: {{ pagesize }};
                 margin: 1cm;
                 @frame footer {
                     -pdf-frame-content: footerContent;
                     bottom: 0cm;
-                    margin-left: 9cm;
-                    margin-right: 9cm;
+                    margin-left: 5cm;
                     height: 1cm;
                 }
             }
         </style>
     </head>
     <body>
-        <p>NOW EMPTY</p>
-        {% comment "no data" %}
-        
-        <div>
-            {% for item in mylist %}
-                RENDER MY CONTENT
+        <h2>Shopping list for today</h2>
+        <h4>For cooking:</h4>
+        <ul>
+            {% for recipe in card_recipes %}
+                <li>{{ recipe }}</li>
             {% endfor %}
+        </ul>
+        <h4>Ingredients needed:</h4>
+        <ul>
+            {% for iid, ingredient in card_ingredients.items %}
+                <li>
+                    {{ ingredient.name }}({{ ingredient.measurement_unit }}) : 
+                    {{ ingredient.amount }}
+                </li>
+            {% endfor %}
+        </ul>
+
+         <div id="footerContent">
+            <p>{{ about }}</p>
         </div>
-        <div id="footerContent">
-            {%block page_foot%}
-                Page <pdf:pagenumber>
-            {%endblock%}
-        </div>
-        {% endcomment %}
     </body>
 </html>

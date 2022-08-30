@@ -1,3 +1,5 @@
+import datetime
+
 from django.conf import settings
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
@@ -207,10 +209,35 @@ class RecipeViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=["get"])
     def download_shopping_cart(self, request):
 
+        card_ingredients = {}
+        card_recipes = []
+        user_recipes = Recipe.objects.filter(shopping_card=request.user)
+        for recipe in user_recipes:
+            card_recipes.append(recipe.name)
+            recipe_ingredients = recipe.recipe_ingredients.all()
+            for ingredient in recipe_ingredients:
+                if ingredient.ingredient.id in card_ingredients:
+                    amount = (
+                        ingredient.amount
+                        + card_ingredients[ingredient.ingredient.id]["amount"]
+                    )
+                else:
+                    amount = ingredient.amount
+                card_ingredients[ingredient.ingredient.id] = {
+                    "name": ingredient.ingredient.name,
+                    "measurement_unit": ingredient.ingredient.measurement_unit,
+                    "amount": amount,
+                }
+
+        timenow = datetime.datetime.now()
+        time_label = timenow.strftime("%b %d %Y %H:%M:%S")
         template_card = "download_shopping_cart.html"
         context = {
             "pagesize": PDF_PAGE_SIZE,
-            # "mylist": results,
+            "card_recipes": card_recipes,
+            "card_ingredients": card_ingredients,
+            "time_label": time_label,
+            "about": MESSAGES["pdf_about"],
         }
         return render_to_pdf(template_card, context)
 
