@@ -45,14 +45,16 @@ class OnlyGetAutorised(permissions.BasePermission):
 
 
 class GetOrGPPDAutorized(permissions.BasePermission):
-    """Allow GET for all.
+    """Allow GET for all, but disable download_shopping_cart for non auth.
     Allow POST, PATCH and DELETE for autorized."""
 
     def has_permission(self, request, view):
 
         auth_allow_methods = ("GET", "POST", "PATCH", "DELETE")
 
-        return request.method == "GET" or (
+        return (
+            request.method == "GET" and view.action != "download_shopping_cart"
+        ) or (
             request.user.is_authenticated
             and request.method in auth_allow_methods
         )

@@ -4,5 +4,8 @@ django-extra-fields==3.0.2
 django-filter==22.1
 djangorestframework==3.13.1
 djoser==2.1.0
+html5lib==1.1 #
 Pillow==9.2.0
 psycopg2-binary==2.9.3
+pyPdf==1.13
+xhtml2pdf==0.2.8

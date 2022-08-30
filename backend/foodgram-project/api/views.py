@@ -23,8 +23,10 @@ from .serializers import (
     UserSerializer,
     UserSetPasswordSerializer,
 )
+from .utils import render_to_pdf
 
 MESSAGES = getattr(settings, "MESSAGES", None)
+PDF_PAGE_SIZE = getattr(settings, "PDF_PAGE_SIZE", "A4")
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -142,7 +144,6 @@ class RecipeViewSet(viewsets.ModelViewSet):
     permission_classes = (GetOrGPPDAutorized,)
 
     def create(self, request, *args, **kwargs):
-
         request.data["tag_list"] = request.data.pop("tags")
         return super().create(request, *args, **kwargs)
 
@@ -202,6 +203,16 @@ class RecipeViewSet(viewsets.ModelViewSet):
         return self.add_remove_m2m_relation(
             request, Recipe, "shopping_card", pk, RecipeShotSerializer
         )
+
+    @action(detail=False, methods=["get"])
+    def download_shopping_cart(self, request):
+
+        template_card = "download_shopping_cart.html"
+        context = {
+            "pagesize": PDF_PAGE_SIZE,
+            # "mylist": results,
+        }
+        return render_to_pdf(template_card, context)
 
 
 class TagViewSet(viewsets.ModelViewSet):
