@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.db.models import Count
 
 from .models import Recipe, RecipeIngredients, Tag
 
@@ -12,10 +13,10 @@ class RecipeTagsInstanceInline(admin.TabularInline):
 
 
 class RecipeAdmin(admin.ModelAdmin):
-    list_display = ("name", "author", "cooking_time")
+    list_display = ("name", "author")
     search_fields = ("name", "text")
+    list_filter = ("author", "name", "tags")
     inlines = (RecipeIngredientsInstanceInline,)
-    tag = (RecipeTagsInstanceInline,)
 
 
 class TagAdmin(admin.ModelAdmin):
