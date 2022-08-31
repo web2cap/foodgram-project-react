@@ -3,11 +3,6 @@ from pathlib import Path
 
 DEBUG = True
 
-if DEBUG == True:
-    from dotenv import load_dotenv
-
-    load_dotenv()
-
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -17,7 +12,8 @@ SECRET_KEY = os.getenv(
 )
 
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["web", "localhost"]
+CSRF_TRUSTED_ORIGINS = ["http://localhost"]
 
 
 INSTALLED_APPS = [

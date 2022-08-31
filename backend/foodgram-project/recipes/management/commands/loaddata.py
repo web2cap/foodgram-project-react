@@ -1,27 +1,32 @@
 import csv
+import os
 
-import django.db.utils
-from django.conf import settings
+from django.contrib.auth import get_user_model
 from django.core.management.base import BaseCommand
 from django.shortcuts import get_object_or_404
 from recipes.models import Ingredient, Recipe, Tag
-from users.models import User
 
-ST_ADMIN_PASS = getattr(settings, "ST_ADMIN_PASS", None)
+User = get_user_model()
 
 
 class Command(BaseCommand):
     def handle(self, *args, **options):
 
-        self.csv2orm("../../data/tags.csv", Tag, ["name", "colour", "slug"])
+        self.csv2orm("data/tags.csv", Tag, ["name", "colour", "slug"])
         self.csv2orm(
-            "../../data/ingredients.csv",
+            "data/ingredients.csv",
             Ingredient,
             ["name", "measurement_unit"],
         )
-        self.csv2orm("../../data/users.csv", User, ["username", "email"])
 
-        with open("../../data/recipes.csv", "r", encoding="utf-8") as csvfile:
+        self.csv2orm("data/users.csv", User, ["username", "email"])
+        User.objects.create_superuser(
+            os.getenv("ST_ADMIN_LOGIN", default=None),
+            os.getenv("ST_ADMIN_EMAIL", default=None),
+            os.getenv("ST_ADMIN_PASS", default=None),
+        )
+
+        with open("data/recipes.csv", "r", encoding="utf-8") as csvfile:
             freader = csv.DictReader(
                 csvfile,
                 fieldnames=[
