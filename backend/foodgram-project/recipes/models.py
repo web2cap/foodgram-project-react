@@ -1,3 +1,5 @@
+import datetime
+
 from colorfield.fields import ColorField
 from django.db import models
 from ingredients.models import Ingredient
@@ -88,10 +90,15 @@ class Recipe(models.Model):
         blank=True,
     )
 
+    pub_date = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name="Publish date",
+    )
+
     class Meta:
         verbose_name = "Recipe"
         verbose_name_plural = "Recipes"
-        ordering = ["name"]
+        ordering = ["-pub_date"]
 
     def __str__(self):
         return self.name
