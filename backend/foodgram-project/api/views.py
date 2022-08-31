@@ -10,6 +10,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from users.models import Subscription, User
 
+from .filters import RecipesFilter
 from .permissions import (
     GetOrGPPDAutorized,
     OnlyGet,
@@ -141,7 +142,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
     queryset = Recipe.objects.all()
     serializer_class = RecipeSerializer
     filter_backends = (DjangoFilterBackend,)
-    filterset_fields = ("tags",)
+    filterset_class = RecipesFilter
     permission_classes = (GetOrGPPDAutorized,)
 
     def create(self, request, *args, **kwargs):
