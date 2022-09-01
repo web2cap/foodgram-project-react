@@ -16,12 +16,11 @@ services:
       - ./.env
 
   web:
+    # image: web2cap/foodogram:latest
     build:
       context: ../backend/foodgram-project
       dockerfile: Dockerfile
     restart: always
-    ports:
-      - "8000:8000"
     volumes:
       - static_value:/app/static/
       - media_value:/app/media/

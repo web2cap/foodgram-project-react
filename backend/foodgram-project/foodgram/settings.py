@@ -75,7 +75,7 @@ DATABASES = {
         "NAME": os.getenv("DB_NAME", default="foodgram"),
         "USER": os.getenv("DB_USER", default="foodgram"),
         "PASSWORD": os.getenv("DB_PASSWORD", default="foodgram"),
-        "HOST": os.getenv("DB_HOST", default="db"),
+        "HOST": os.getenv("DB_HOST", default="localhost"),
         "PORT": os.getenv("DB_PORT", default="5432"),
     }
 }

@@ -16,7 +16,7 @@ class Tag(models.Model):
         blank=False,
         null=False,
     )
-    colour = ColorField(
+    color = ColorField(
         verbose_name="Color",
         unique=True,
         null=True,
@@ -35,7 +35,7 @@ class Tag(models.Model):
         ordering = ["name"]
 
     def __str__(self):
-        return f"{self.name} [{self.colour}]"
+        return f"{self.name} [{self.color}]"
 
 
 class Recipe(models.Model):

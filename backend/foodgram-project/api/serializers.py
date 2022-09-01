@@ -126,7 +126,7 @@ class TagSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Tag
-        fields = ("id", "name", "colour", "slug")
+        fields = ("id", "name", "color", "slug")
 
 
 class RecipeSerializer(serializers.ModelSerializer):
@@ -138,7 +138,9 @@ class RecipeSerializer(serializers.ModelSerializer):
         many=True,
     )
     tags = TagSerializer(many=True, read_only=True)
-    tag_list = serializers.ListField(write_only=True)
+    tag_list = serializers.ListField(
+        write_only=True, child=serializers.IntegerField(min_value=1)
+    )
     is_favorited = serializers.SerializerMethodField()
     is_in_shopping_cart = serializers.SerializerMethodField()
     image = Base64ImageField()
@@ -172,10 +174,10 @@ class RecipeSerializer(serializers.ModelSerializer):
             instance.recipe_ingredients.create(
                 ingredient=ingredient, amount=ingrow["amount"]
             )
-        tags = list()
+
         for tagid in tag_list:
-            tags.append(get_object_or_404(Tag, id=tagid))
-        instance.tags.add(tags)
+            tag = get_object_or_404(Tag, id=tagid)
+            instance.tags.add(tag)
 
         return instance
 
@@ -226,6 +228,12 @@ class RecipeSerializer(serializers.ModelSerializer):
             ):
                 return True
         return False
+
+    # def to_representation(self, instance):
+    #     response = super(RecipeSerializer, self).to_representation(instance)
+    #     if instance.image:
+    #         response["image"] = instance.image.url
+    #     return response
 
 
 class RecipeShotSerializer(serializers.ModelSerializer):

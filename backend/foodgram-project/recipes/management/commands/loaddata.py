@@ -12,7 +12,7 @@ User = get_user_model()
 class Command(BaseCommand):
     def handle(self, *args, **options):
 
-        self.csv2orm("data/tags.csv", Tag, ["name", "colour", "slug"])
+        self.csv2orm("data/tags.csv", Tag, ["name", "color", "slug"])
         self.csv2orm(
             "data/ingredients.csv",
             Ingredient,
@@ -20,11 +20,14 @@ class Command(BaseCommand):
         )
 
         self.csv2orm("data/users.csv", User, ["username", "email"])
-        User.objects.create_superuser(
-            os.getenv("ST_ADMIN_LOGIN", default=None),
-            os.getenv("ST_ADMIN_EMAIL", default=None),
-            os.getenv("ST_ADMIN_PASS", default=None),
-        )
+        try:
+            User.objects.create_superuser(
+                os.getenv("ST_ADMIN_LOGIN", default=None),
+                os.getenv("ST_ADMIN_EMAIL", default=None),
+                os.getenv("ST_ADMIN_PASS", default=None),
+            )
+        except:
+            pass
 
         with open("data/recipes.csv", "r", encoding="utf-8") as csvfile:
             freader = csv.DictReader(
@@ -58,7 +61,7 @@ class Command(BaseCommand):
                         )
 
                     if author and len(tags) and len(ingredients):
-                        Recipe.objects.get_or_create(
+                        recipe = Recipe.objects.get_or_create(
                             name=row["name"],
                             image=row["image"],
                             text=row["text"],
@@ -66,9 +69,10 @@ class Command(BaseCommand):
                             author=author,
                         )
                         recipe = get_object_or_404(Recipe, name=row["name"])
+                        recipe.tags.clear()
                         for tag in tags:
                             recipe.tags.add(tag)
-
+                        recipe.recipe_ingredients.all().delete()
                         for ingredient in ingredients:
                             recipe.recipe_ingredients.create(**ingredient)
 

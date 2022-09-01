@@ -134,6 +134,7 @@ class IngredientViewSet(viewsets.ModelViewSet):
     permission_classes = (OnlyGet,)
     filter_backends = (filters.SearchFilter,)
     search_fields = ("^name",)
+    pagination_class = None
 
 
 class RecipeViewSet(viewsets.ModelViewSet):
@@ -152,9 +153,6 @@ class RecipeViewSet(viewsets.ModelViewSet):
     def update(self, request, *args, **kwargs):
         request.data["tag_list"] = request.data.pop("tags")
         return super().update(request, *args, **kwargs)
-
-    def perform_update(self, serializer):
-        return super().perform_update(serializer)
 
     def add_remove_m2m_relation(
         self, request, model_main, model_mgr, pk, serializer_class
@@ -248,6 +246,7 @@ class TagViewSet(viewsets.ModelViewSet):
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
     permission_classes = (OnlyGet,)
+    pagination_class = None
 
 
 class SubscriptionViewSet(viewsets.ModelViewSet):
