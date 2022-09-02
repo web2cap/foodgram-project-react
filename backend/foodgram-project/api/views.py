@@ -2,7 +2,8 @@ import datetime
 
 from django.conf import settings
 from django.shortcuts import get_object_or_404
-from django_filters.rest_framework import DjangoFilterBackend
+
+# from django_filters.rest_framework import DjangoFilterBackend
 from ingredients.models import Ingredient
 from recipes.models import Recipe, Tag
 from rest_framework import filters, status, viewsets
@@ -10,7 +11,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from users.models import Subscription, User
 
-from .filters import RecipesFilter
+# from .filters import RecipesFilter
 from .permissions import (
     GetOrGPPDAutorized,
     OnlyGet,
@@ -140,11 +141,18 @@ class IngredientViewSet(viewsets.ModelViewSet):
 class RecipeViewSet(viewsets.ModelViewSet):
     """ViewSet for Recipes."""
 
-    queryset = Recipe.objects.all()
     serializer_class = RecipeSerializer
-    filter_backends = (DjangoFilterBackend,)
-    filterset_class = RecipesFilter
+    # filter_backends = (DjangoFilterBackend,)
+    # filterset_class = RecipesFilter
     permission_classes = (GetOrGPPDAutorized,)
+
+    def get_queryset(self):
+        queryset = Recipe.objects.all()
+
+        tag_list = self.request.GET.getlist("tags")
+        if tag_list:
+            queryset = queryset.filter(tags__slug__in=tag_list).distinct()
+        return queryset
 
     def create(self, request, *args, **kwargs):
         request.data["tag_list"] = request.data.pop("tags")
@@ -153,6 +161,12 @@ class RecipeViewSet(viewsets.ModelViewSet):
     def update(self, request, *args, **kwargs):
         request.data["tag_list"] = request.data.pop("tags")
         return super().update(request, *args, **kwargs)
+
+    def list(self, request, *args, **kwargs):
+        # print(request.query_params.getlist("tags"))
+        # print(request.query_params.get("tags"))
+        # print(type(request.query_params.get("tags")))
+        return super().list(request, *args, **kwargs)
 
     def add_remove_m2m_relation(
         self, request, model_main, model_mgr, pk, serializer_class

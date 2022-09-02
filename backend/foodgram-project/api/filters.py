@@ -3,7 +3,7 @@ from recipes.models import Recipe
 
 
 class RecipesFilter(filters.FilterSet):
-    """Фильтр для вьюсета TitleViewSet."""
+    """Recipes Filter ."""
 
     tags = filters.CharFilter(
         field_name="tags__slug",  # lookup_expr="icontains"
