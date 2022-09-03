@@ -24,11 +24,15 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "name",
-                    models.CharField(max_length=200, verbose_name="Ingredient name"),
+                    models.CharField(
+                        max_length=200, verbose_name="Ingredient name"
+                    ),
                 ),
                 (
                     "measurement_unit",
-                    models.CharField(max_length=200, verbose_name="Measuring unit"),
+                    models.CharField(
+                        max_length=200, verbose_name="Measuring unit"
+                    ),
                 ),
             ],
             options={

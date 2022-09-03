@@ -24,11 +24,15 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "name",
-                    models.CharField(max_length=200, verbose_name="Ingerdient name"),
+                    models.CharField(
+                        max_length=200, verbose_name="Ingerdient name"
+                    ),
                 ),
                 (
                     "measurement_unit",
-                    models.CharField(max_length=200, verbose_name="Measuring unit"),
+                    models.CharField(
+                        max_length=200, verbose_name="Measuring unit"
+                    ),
                 ),
             ],
             options={
@@ -40,7 +44,8 @@ class Migration(migrations.Migration):
         migrations.AddConstraint(
             model_name="ingerdient",
             constraint=models.UniqueConstraint(
-                fields=("name", "measurement_unit"), name="unique_ingerdient_in_unit"
+                fields=("name", "measurement_unit"),
+                name="unique_ingerdient_in_unit",
             ),
         ),
     ]

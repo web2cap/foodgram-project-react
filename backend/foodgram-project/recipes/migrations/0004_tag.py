@@ -45,7 +45,10 @@ class Migration(migrations.Migration):
                 (
                     "slug",
                     models.SlugField(
-                        max_length=200, null=True, unique=True, verbose_name="Slug"
+                        max_length=200,
+                        null=True,
+                        unique=True,
+                        verbose_name="Slug",
                     ),
                 ),
             ],

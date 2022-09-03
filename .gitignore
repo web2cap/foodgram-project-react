@@ -132,8 +132,6 @@ dmypy.json
 .idea
 .vscode
 
-#media
-media/
-restart.sh
 
+# mac
 .DS_Store

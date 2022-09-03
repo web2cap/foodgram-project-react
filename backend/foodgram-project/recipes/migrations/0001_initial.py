@@ -29,7 +29,12 @@ class Migration(migrations.Migration):
                         verbose_name="ID",
                     ),
                 ),
-                ("name", models.CharField(max_length=200, verbose_name="Recipe name")),
+                (
+                    "name",
+                    models.CharField(
+                        max_length=200, verbose_name="Recipe name"
+                    ),
+                ),
                 (
                     "image",
                     models.ImageField(
