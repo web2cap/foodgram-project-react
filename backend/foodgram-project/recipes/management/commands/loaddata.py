@@ -21,12 +21,14 @@ class Command(BaseCommand):
         )
 
         self.csv2orm("data/users.csv", User, ["username", "email"])
-
-        User.objects.get_or_create(
-            os.getenv("ST_ADMIN_LOGIN", default=None),
-            os.getenv("ST_ADMIN_EMAIL", default=None),
-            os.getenv("ST_ADMIN_PASS", default=None),
-        )
+        try:
+            User.objects.create_superuser(
+                os.getenv("ST_ADMIN_LOGIN", default=None),
+                os.getenv("ST_ADMIN_EMAIL", default=None),
+                os.getenv("ST_ADMIN_PASS", default=None),
+            )
+        except:
+            pass
 
         with open("data/recipes.csv", "r", encoding="utf-8") as csvfile:
             freader = csv.DictReader(

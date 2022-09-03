@@ -1,4 +1,5 @@
 # local deploy project
+docker compose stop
 docker compose rm web -f
 docker image rm infra_web
 docker compose up -d 
