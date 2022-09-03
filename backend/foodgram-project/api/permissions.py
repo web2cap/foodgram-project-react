@@ -12,6 +12,7 @@ class RegisterUserProfileOrAutorised(permissions.BasePermission):
     def has_permission(self, request, view):
         path_end = request.path_info.split("/")[-2]
         auth_allow_methods = ("GET", "POST")
+        # print(view.action)
         return (
             (
                 (

@@ -1,9 +1,8 @@
 import datetime
 
 from django.conf import settings
+from django.db.models import OuterRef, Prefetch, Subquery
 from django.shortcuts import get_object_or_404
-
-# from django_filters.rest_framework import DjangoFilterBackend
 from ingredients.models import Ingredient
 from recipes.models import Recipe, Tag
 from rest_framework import filters, status, viewsets
@@ -11,7 +10,6 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from users.models import Subscription, User
 
-# from .filters import RecipesFilter
 from .permissions import (
     GetOrGPPDAutorized,
     OnlyGet,
@@ -142,8 +140,6 @@ class RecipeViewSet(viewsets.ModelViewSet):
     """ViewSet for Recipes."""
 
     serializer_class = RecipeSerializer
-    # filter_backends = (DjangoFilterBackend,)
-    # filterset_class = RecipesFilter
     permission_classes = (GetOrGPPDAutorized,)
 
     def get_queryset(self):
@@ -152,6 +148,22 @@ class RecipeViewSet(viewsets.ModelViewSet):
         tag_list = self.request.GET.getlist("tags")
         if tag_list:
             queryset = queryset.filter(tags__slug__in=tag_list).distinct()
+
+        author = self.request.GET.get("author")
+        if author:
+            queryset = queryset.filter(author__id=author)
+
+        if not self.request.user.is_authenticated:
+            return queryset
+
+        is_in_shopping_cart = self.request.GET.get("is_in_shopping_cart")
+        if is_in_shopping_cart:
+            queryset = queryset.filter(shopping_card=self.request.user)
+
+        is_favorited = self.request.GET.get("is_favorited")
+        if is_favorited:
+            queryset = queryset.filter(favorite=self.request.user)
+
         return queryset
 
     def create(self, request, *args, **kwargs):
@@ -161,12 +173,6 @@ class RecipeViewSet(viewsets.ModelViewSet):
     def update(self, request, *args, **kwargs):
         request.data["tag_list"] = request.data.pop("tags")
         return super().update(request, *args, **kwargs)
-
-    def list(self, request, *args, **kwargs):
-        # print(request.query_params.getlist("tags"))
-        # print(request.query_params.get("tags"))
-        # print(type(request.query_params.get("tags")))
-        return super().list(request, *args, **kwargs)
 
     def add_remove_m2m_relation(
         self, request, model_main, model_mgr, pk, serializer_class
@@ -274,4 +280,18 @@ class SubscriptionViewSet(viewsets.ModelViewSet):
             "follow"
         )
         subscription = User.objects.filter(id__in=followed_people)
+        recipes_limit = int(self.request.GET.get("recipes_limit"))
+        if recipes_limit:
+            subqry = Subquery(
+                Recipe.objects.filter(author=OuterRef("author")).values_list(
+                    "id", flat=True
+                )[:recipes_limit]
+            )
+
+            subscription = subscription.prefetch_related(
+                Prefetch(
+                    "recipes", queryset=Recipe.objects.filter(id__in=subqry)
+                )
+            )
+
         return subscription

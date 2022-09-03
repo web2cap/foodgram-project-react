@@ -229,12 +229,6 @@ class RecipeSerializer(serializers.ModelSerializer):
                 return True
         return False
 
-    # def to_representation(self, instance):
-    #     response = super(RecipeSerializer, self).to_representation(instance)
-    #     if instance.image:
-    #         response["image"] = instance.image.url
-    #     return response
-
 
 class RecipeShotSerializer(serializers.ModelSerializer):
     """Serializer for Recipe.
@@ -275,4 +269,4 @@ class SubscriptionSerializer(serializers.ModelSerializer):
         return True
 
     def get_recipes_count(self, obj):
-        return obj.recipes.count()
+        return User.objects.get(id=obj.id).recipes.count()
