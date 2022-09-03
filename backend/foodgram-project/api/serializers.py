@@ -4,12 +4,13 @@ from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 from django.shortcuts import get_object_or_404
 from drf_extra_fields.fields import Base64ImageField
+from rest_framework import serializers, status
+
 from ingredients.models import Ingredient
 from recipes.models import Recipe, RecipeIngredients, Tag
-from rest_framework import serializers, status
 from users.models import User
-
 from .exceptions import CustomAPIException
+
 
 MESSAGES = getattr(settings, "MESSAGES", None)
 

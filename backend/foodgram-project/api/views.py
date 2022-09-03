@@ -3,13 +3,13 @@ import datetime
 from django.conf import settings
 from django.db.models import OuterRef, Prefetch, Subquery
 from django.shortcuts import get_object_or_404
-from ingredients.models import Ingredient
-from recipes.models import Recipe, Tag
 from rest_framework import filters, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from users.models import Subscription, User
 
+from ingredients.models import Ingredient
+from recipes.models import Recipe, Tag
+from users.models import Subscription, User
 from .permissions import (
     GetOrGPPDAutorized,
     OnlyGet,
@@ -26,6 +26,7 @@ from .serializers import (
     UserSetPasswordSerializer,
 )
 from .utils import render_to_pdf
+
 
 MESSAGES = getattr(settings, "MESSAGES", None)
 PDF_PAGE_SIZE = getattr(settings, "PDF_PAGE_SIZE", "A4")
