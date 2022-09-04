@@ -1,7 +1,7 @@
 FROM python:3.10-slim
 
 WORKDIR /app
-COPY ./ .
+COPY backend/foodgram-project/ .
 RUN ls -al
 RUN pip3 install -r requirements.txt --no-cache-dir
 
