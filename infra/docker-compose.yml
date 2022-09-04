@@ -16,10 +16,7 @@ services:
       - ./.env
 
   web:
-    # image: web2cap/foodogram:latest
-    build:
-      context: ../backend/foodgram-project
-      dockerfile: Dockerfile
+    image: web2cap/foodgram_web:latest
     restart: always
     volumes:
       - static_value:/app/static/
