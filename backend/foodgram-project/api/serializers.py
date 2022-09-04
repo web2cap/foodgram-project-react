@@ -177,10 +177,15 @@ class RecipeSerializer(serializers.ModelSerializer):
 
         instance.tags.set(tags)
 
+    def check_ingredients(self, ingredients):
+        if not len(ingredients):
+            raise serializers.ValidationError(MESSAGES["ingredients_requared"])
+
     def create(self, validated_data):
 
         validated_data["author"] = self.context["request"].user
         recipe_ingredients = validated_data.pop("recipe_ingredients")
+        self.check_ingredients(recipe_ingredients)
         tag_list = validated_data.pop("tag_list")
         instance = Recipe.objects.create(**validated_data)
         self.add_ingredients_tags(instance, recipe_ingredients, tag_list)
@@ -199,6 +204,7 @@ class RecipeSerializer(serializers.ModelSerializer):
 
         recipe_ingredients = validated_data.pop("recipe_ingredients")
         tag_list = validated_data.pop("tag_list")
+        self.check_ingredients(recipe_ingredients)
         instance.recipe_ingredients.all().delete()
         self.add_ingredients_tags(instance, recipe_ingredients, tag_list)
         return super().update(instance, validated_data)

@@ -5,6 +5,9 @@ from .models import Recipe, RecipeIngredients, Tag
 
 class RecipeIngredientsInstanceInline(admin.TabularInline):
     model = RecipeIngredients
+    extra = 3
+    # max_num = 1
+    min_num = 1
 
 
 class RecipeTagsInstanceInline(admin.TabularInline):
