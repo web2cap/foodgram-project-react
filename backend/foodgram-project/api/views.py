@@ -6,9 +6,11 @@ from django.shortcuts import get_object_or_404
 from rest_framework import filters, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from django.db.models import Sum
+
 
 from ingredients.models import Ingredient
-from recipes.models import Recipe, Tag
+from recipes.models import Recipe, Tag, RecipeIngredients
 from users.models import Subscription, User
 from .permissions import (
     GetOrGPPDAutorized,
@@ -228,25 +230,12 @@ class RecipeViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=["get"])
     def download_shopping_cart(self, request):
 
-        card_ingredients = {}
-        card_recipes = []
-        user_recipes = Recipe.objects.filter(shopping_card=request.user)
-        for recipe in user_recipes:
-            card_recipes.append(recipe.name)
-            recipe_ingredients = recipe.recipe_ingredients.all()
-            for ingredient in recipe_ingredients:
-                if ingredient.ingredient.id in card_ingredients:
-                    amount = (
-                        ingredient.amount
-                        + card_ingredients[ingredient.ingredient.id]["amount"]
-                    )
-                else:
-                    amount = ingredient.amount
-                card_ingredients[ingredient.ingredient.id] = {
-                    "name": ingredient.ingredient.name,
-                    "measurement_unit": ingredient.ingredient.measurement_unit,
-                    "amount": amount,
-                }
+        card_recipes = Recipe.objects.filter(shopping_card=request.user)
+        card_ingredients = (
+            RecipeIngredients.objects.filter(recipe__in=card_recipes)
+            .values("ingredient__name", "ingredient__measurement_unit")
+            .annotate(amount=Sum("amount"))
+        )
 
         timenow = datetime.datetime.now()
         time_label = timenow.strftime("%b %d %Y %H:%M:%S")
@@ -282,17 +271,15 @@ class SubscriptionViewSet(viewsets.ModelViewSet):
         )
         subscription = User.objects.filter(id__in=followed_people)
         recipes_limit = int(self.request.GET.get("recipes_limit"))
-        if recipes_limit:
-            subqry = Subquery(
-                Recipe.objects.filter(author=OuterRef("author")).values_list(
-                    "id", flat=True
-                )[:recipes_limit]
-            )
+        if not recipes_limit:
+            return subscription
 
-            subscription = subscription.prefetch_related(
-                Prefetch(
-                    "recipes", queryset=Recipe.objects.filter(id__in=subqry)
-                )
-            )
-
+        subqry = Subquery(
+            Recipe.objects.filter(author=OuterRef("author")).values_list(
+                "id", flat=True
+            )[:recipes_limit]
+        )
+        subscription = subscription.prefetch_related(
+            Prefetch("recipes", queryset=Recipe.objects.filter(id__in=subqry))
+        )
         return subscription

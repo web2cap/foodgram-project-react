@@ -58,6 +58,7 @@ class Recipe(models.Model):
         verbose_name="Cooking time",
         blank=False,
         null=False,
+        validators=(validator_not_zero,),
     )
     author = models.ForeignKey(
         User,
@@ -126,3 +127,13 @@ class RecipeIngredients(models.Model):
         null=False,
         validators=(validator_not_zero,),
     )
+
+    class Meta:
+        verbose_name = "Recipe ingredients"
+        verbose_name_plural = "Recipe ingredients"
+        constraints = [
+            models.UniqueConstraint(
+                fields=["ingredient", "recipe"],
+                name="unique_recipe_ingredient",
+            )
+        ]

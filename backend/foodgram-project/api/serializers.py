@@ -53,11 +53,10 @@ class UserSerializer(serializers.ModelSerializer):
     def get_is_subscribed(self, obj):
         request = self.context.get("request")
         if request and hasattr(request, "user"):
-            if (
+            return (
                 request.user.is_authenticated
                 and request.user.follower.filter(follow=obj).exists()
-            ):
-                return True
+            )
         return False
 
 
@@ -162,27 +161,33 @@ class RecipeSerializer(serializers.ModelSerializer):
             "is_in_shopping_cart",
         )
 
+    def add_ingredients_tags(self, instance, ingredients, tags):
+        recipe_ingredients = list()
+        for ingrow in ingredients:
+            recipe_ingredients.append(
+                RecipeIngredients(
+                    ingredient=get_object_or_404(
+                        Ingredient, id=ingrow["ingredient"]["id"]
+                    ),
+                    recipe=instance,
+                    amount=ingrow["amount"],
+                )
+            )
+        RecipeIngredients.objects.bulk_create(recipe_ingredients)
+
+        instance.tags.set(tags)
+
     def create(self, validated_data):
 
         validated_data["author"] = self.context["request"].user
         recipe_ingredients = validated_data.pop("recipe_ingredients")
         tag_list = validated_data.pop("tag_list")
         instance = Recipe.objects.create(**validated_data)
-        for ingrow in recipe_ingredients:
-            ingredient = get_object_or_404(
-                Ingredient, id=ingrow["ingredient"]["id"]
-            )
-            instance.recipe_ingredients.create(
-                ingredient=ingredient, amount=ingrow["amount"]
-            )
-
-        for tagid in tag_list:
-            tag = get_object_or_404(Tag, id=tagid)
-            instance.tags.add(tag)
-
+        self.add_ingredients_tags(instance, recipe_ingredients, tag_list)
         return instance
 
     def update(self, instance, validated_data):
+
         if (
             instance.author != self.context["request"].user
             and not self.context["request"].user.is_superuser
@@ -193,41 +198,27 @@ class RecipeSerializer(serializers.ModelSerializer):
             )
 
         recipe_ingredients = validated_data.pop("recipe_ingredients")
-        instance.recipe_ingredients.all().delete()
-        for ingrow in recipe_ingredients:
-            ingredient = get_object_or_404(
-                Ingredient, id=ingrow["ingredient"]["id"]
-            )
-            instance.recipe_ingredients.create(
-                ingredient=ingredient, amount=ingrow["amount"]
-            )
-
         tag_list = validated_data.pop("tag_list")
-        tags = list()
-        for tagid in tag_list:
-            tags.append(get_object_or_404(Tag, id=tagid))
-        instance.tags.set(tags)
-
+        instance.recipe_ingredients.all().delete()
+        self.add_ingredients_tags(instance, recipe_ingredients, tag_list)
         return super().update(instance, validated_data)
 
     def get_is_favorited(self, obj):
         request = self.context.get("request")
         if request and hasattr(request, "user"):
-            if (
+            return (
                 request.user.is_authenticated
                 and obj.favorite.filter(id=request.user.id).exists()
-            ):
-                return True
+            )
         return False
 
     def get_is_in_shopping_cart(self, obj):
         request = self.context.get("request")
         if request and hasattr(request, "user"):
-            if (
+            return (
                 request.user.is_authenticated
                 and obj.shopping_card.filter(id=request.user.id).exists()
-            ):
-                return True
+            )
         return False
 
 
@@ -267,7 +258,13 @@ class SubscriptionSerializer(serializers.ModelSerializer):
         )
 
     def get_is_subscribed(self, obj):
-        return True
+        request = self.context.get("request")
+        if request and hasattr(request, "user"):
+            return (
+                request.user.is_authenticated
+                and request.user.follower.filter(follow=obj).exists()
+            )
+        return False
 
     def get_recipes_count(self, obj):
         return User.objects.get(id=obj.id).recipes.count()

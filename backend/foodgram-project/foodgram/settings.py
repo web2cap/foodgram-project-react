@@ -113,9 +113,9 @@ DJOSER = {
     "LOGIN_FIELD": "email",
 }
 
-LANGUAGE_CODE = "en-us"
+LANGUAGE_CODE = "ru-ru"
 
-TIME_ZONE = "UTC"
+TIME_ZONE = "Europe/Istanbul"
 
 USE_I18N = True
 

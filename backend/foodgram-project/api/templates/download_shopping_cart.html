@@ -30,11 +30,12 @@
                 <li>{{ recipe }}</li>
             {% endfor %}
         </ul>
-        <h4>Ingredients needed:</h4>
+        <h2>Ingredients needed:</h2>
         <ul>
-            {% for iid, ingredient in card_ingredients.items %}
+            {% for  ingredient in card_ingredients %}
                 <li>
-                    {{ ingredient.name }}({{ ingredient.measurement_unit }}) : 
+                    {{ ingredient.ingredient__name }}
+                    ({{ ingredient.ingredient__measurement_unit }}) : 
                     {{ ingredient.amount }}
                 </li>
             {% endfor %}
