@@ -3,6 +3,7 @@ from django.db import models
 
 from ingredients.models import Ingredient
 from users.models import User
+
 from .validators import validator_not_zero
 
 

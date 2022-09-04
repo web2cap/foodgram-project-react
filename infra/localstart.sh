@@ -8,5 +8,5 @@ docker compose exec web python manage.py loaddata
 docker compose exec web python manage.py collectstatic --no-input 
 
 # use this for local debbuging
-# docker compose stop
-# docker compose up
+docker compose stop
+docker compose up

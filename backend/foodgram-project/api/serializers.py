@@ -9,8 +9,8 @@ from rest_framework import serializers, status
 from ingredients.models import Ingredient
 from recipes.models import Recipe, RecipeIngredients, Tag
 from users.models import User
-from .exceptions import CustomAPIException
 
+from .exceptions import CustomAPIException
 
 MESSAGES = getattr(settings, "MESSAGES", None)
 
