@@ -26,6 +26,7 @@ class Ingredient(models.Model):
                 name="unique_ingredient_in_unit",
             )
         ]
+        indexes = [models.Index(fields=["name"])]
 
     def __str__(self):
         return self.name

@@ -6,7 +6,7 @@ from django.shortcuts import get_object_or_404
 from rest_framework import filters, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from django.db.models import Sum
+from django.db.models import Sum, Count
 
 
 from ingredients.models import Ingredient
@@ -269,7 +269,9 @@ class SubscriptionViewSet(viewsets.ModelViewSet):
         followed_people = Subscription.objects.filter(follower=user).values(
             "follow"
         )
-        subscription = User.objects.filter(id__in=followed_people)
+        subscription = User.objects.filter(id__in=followed_people).annotate(
+            recipes_count=Count("recipes")
+        )
         recipes_limit = int(self.request.GET.get("recipes_limit"))
         if not recipes_limit:
             return subscription

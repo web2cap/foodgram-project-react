@@ -31,6 +31,10 @@ class Tag(models.Model):
         verbose_name = "Tag"
         verbose_name_plural = "Tags"
         ordering = ["name"]
+        indexes = [
+            models.Index(fields=["slug"]),
+            models.Index(fields=["name"]),
+        ]
 
     def __str__(self):
         return f"{self.name} [{self.color}]"
@@ -98,6 +102,9 @@ class Recipe(models.Model):
         verbose_name = "Recipe"
         verbose_name_plural = "Recipes"
         ordering = ["-pub_date"]
+        indexes = [
+            models.Index(fields=["-pub_date"]),
+        ]
 
     def __str__(self):
         return self.name
