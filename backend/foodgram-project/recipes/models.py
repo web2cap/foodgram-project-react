@@ -137,3 +137,6 @@ class RecipeIngredients(models.Model):
                 name="unique_recipe_ingredient",
             )
         ]
+
+    def __str__(self):
+        return f"{self.ingredient} in {self.recipe}"
