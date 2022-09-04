@@ -12,6 +12,9 @@ class Migration(migrations.Migration):
     operations = [
         migrations.AddIndex(
             model_name="ingredient",
-            index=models.Index(fields=["name"], name="ingredients_name_dd17d9_idx"),
+            index=models.Index(
+                fields=["name"],
+                name="ingredients_name_dd17d9_idx"
+            ),
         ),
     ]

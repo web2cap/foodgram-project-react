@@ -67,19 +67,6 @@ class UserViewSet(viewsets.ModelViewSet):
 
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-    @action(detail=False, methods=["post"])
-    def set_password(self, request):
-        """Self change password.
-        Endpoint /set_password/."""
-
-        serializer = UserSetPasswordSerializer(
-            request.user, data=request.data, partial=True
-        )
-        if serializer.is_valid(raise_exception=True):
-            self.perform_update(serializer)
-
-        return Response(status=status.HTTP_204_NO_CONTENT)
-
     @action(detail=True, methods=["post", "delete"])
     def subscribe(self, request, id=None):
         """Subscribe for user if method POST.
@@ -148,12 +135,10 @@ class RecipeViewSet(viewsets.ModelViewSet):
         if not self.request.user.is_authenticated:
             return queryset
 
-        is_in_shopping_cart = self.request.GET.get("is_in_shopping_cart")
-        if is_in_shopping_cart:
+        if self.request.GET.get("is_in_shopping_cart"):
             queryset = queryset.filter(shopping_card=self.request.user)
 
-        is_favorited = self.request.GET.get("is_favorited")
-        if is_favorited:
+        if self.request.GET.get("is_favorited"):
             queryset = queryset.filter(favorite=self.request.user)
 
         return queryset

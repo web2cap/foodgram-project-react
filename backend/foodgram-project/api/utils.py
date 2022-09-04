@@ -9,16 +9,14 @@ from xhtml2pdf import pisa
 
 def fetch_pdf_resources(uri, rel=None):
     if uri.find(settings.MEDIA_URL) != -1:
-        path = os.path.join(
+        return os.path.join(
             settings.MEDIA_ROOT, uri.replace(settings.MEDIA_URL, "")
         )
     elif uri.find(settings.STATIC_URL) != -1:
-        path = os.path.join(
+        return os.path.join(
             settings.STATIC_ROOT, uri.replace(settings.STATIC_URL, "")
         )
-    else:
-        path = None
-    return path
+    return None
 
 
 def render_to_pdf(template_src, context_dict={}):

@@ -27,7 +27,7 @@ class Command(BaseCommand):
                 os.getenv("ST_ADMIN_EMAIL", default=None),
                 os.getenv("ST_ADMIN_PASS", default=None),
             )
-        except:
+        except Exception:
             pass
 
         with open("data/recipes.csv", "r", encoding="utf-8") as csvfile:
@@ -77,7 +77,7 @@ class Command(BaseCommand):
                         for ingredient in ingredients:
                             recipe.recipe_ingredients.create(**ingredient)
 
-                except:
+                except Exception:
                     continue
 
     def csv2orm(self, file, model, head):
@@ -87,5 +87,5 @@ class Command(BaseCommand):
                 try:
                     data = {h: row[h] for h in head}
                     model.objects.get_or_create(**data)
-                except:
+                except Exception:
                     continue

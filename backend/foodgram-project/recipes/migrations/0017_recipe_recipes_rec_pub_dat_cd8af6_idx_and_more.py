@@ -18,10 +18,14 @@ class Migration(migrations.Migration):
         ),
         migrations.AddIndex(
             model_name="tag",
-            index=models.Index(fields=["slug"], name="recipes_tag_slug_3ea026_idx"),
+            index=models.Index(
+                fields=["slug"], name="recipes_tag_slug_3ea026_idx"
+            ),
         ),
         migrations.AddIndex(
             model_name="tag",
-            index=models.Index(fields=["name"], name="recipes_tag_name_56fd94_idx"),
+            index=models.Index(
+                fields=["name"], name="recipes_tag_name_56fd94_idx"
+            ),
         ),
     ]
