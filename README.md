@@ -46,25 +46,28 @@ xhtml2pdf==0.2.8
 
 ### ENV structure
 
+```
 ST_SECRET_KEY # Django secret key
 ST_ADMIN_LOGIN # Django superuser admin
 ST_ADMIN_EMAIL # Django superuser email
 ST_ADMIN_PASS # Django superuser password
 DB_ENGINE=django.db.backends.postgresql_psycopg2
-DB_NAME=foodgram
-POSTGRES_USER=postgres
-POSTGRES_PASSWORD # new postgres user password
+DB_NAME # Project database name
 DB_HOST=db
 DB_PORT=5432
-DB_USER=foodgram
-DB_PASSWORD=foodgram
+DB_USER # Database user
+DB_PASSWORD # Database user password
+```
 
 ### How to start the project:
 
-Install docker and docker compose
-Clone the repository
-Prepere .env file
-Run infra/localstart.sh
+ - Install docker and docker compose
+ - Clone the repository
+ - Prepere infra/.env file
+ - Run infra/localstart.sh
+ - Create database and role in db container
+ - Run infra/localstart.sh again
+
 
 
 ### API description
