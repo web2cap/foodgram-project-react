@@ -282,4 +282,7 @@ class SubscriptionSerializer(serializers.ModelSerializer):
         return False
 
     def get_recipes_count(self, obj):
-        return obj.recipes_count
+        
+        if hasattr(obj, "recipes_count"):
+            return obj.recipes_count
+        return obj.recipes.count()
