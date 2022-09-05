@@ -12,8 +12,8 @@ SECRET_KEY = os.getenv(
 )
 
 
-ALLOWED_HOSTS = ["web", "localhost"]
-CSRF_TRUSTED_ORIGINS = ["http://localhost"]
+ALLOWED_HOSTS = ["web", "localhost", "web2cap.hopto.org"]
+CSRF_TRUSTED_ORIGINS = ["http://localhost", "http://web2cap.hopto.org"]
 
 
 INSTALLED_APPS = [

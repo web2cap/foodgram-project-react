@@ -265,15 +265,6 @@ class SubscriptionSerializer(serializers.ModelSerializer):
 
     def get_is_subscribed(self, obj):
 
-        # Для Максима Любиева
-        # не смог найти тебя в слаке, сообщил об этом куратору,
-
-        # тут бы я всегда возвращал True как в прошлой версии,
-        # т.к. это подписки пользователя и из этого списка
-        # пользователь на всех подписан по логике. Но я переделал)
-
-        # данный комент удалю ко второму этапу, сорри
-
         request = self.context.get("request")
         if request and hasattr(request, "user"):
             return (
