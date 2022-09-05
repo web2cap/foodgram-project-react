@@ -12,6 +12,9 @@ admin@admin.loc / Az121212 admin access
 
 a@aa.aa / Az121212 user access
 
+![example workflow](https://github.com/web2cap/foodgram-project-react/actions/workflows/foodgram_wf.yml/badge.svg)
+
+
 ### Project details:
 
 SPA social network for storing and viewing recipes. Allows you to register, add and view recipes, add recipes to your favorites. Subscribe to the user. Add recipes to shopping lists and generate PDFs to buy the ingredients you need.
