@@ -1,7 +1,7 @@
 import os
 from pathlib import Path
 
-DEBUG = True
+DEBUG = False
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent
