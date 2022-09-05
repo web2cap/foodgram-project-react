@@ -161,6 +161,20 @@ class RecipeSerializer(serializers.ModelSerializer):
             "is_in_shopping_cart",
         )
 
+    def validate(self, data):
+        """Valigate, that ingredients list for recipe not empty.
+        And that tags list for recipe not empty."""
+
+        validation_errors = dict()
+        if not len(data["recipe_ingredients"]):
+            validation_errors["ingredients"] = MESSAGES["ingredients_requared"]
+        if not len(data["tag_list"]):
+            validation_errors["tags"] = MESSAGES["tags_requared"]
+            
+        if len(validation_errors):
+            raise serializers.ValidationError(validation_errors)
+        return data 
+
     def add_ingredients_tags(self, instance, ingredients, tags):
         recipe_ingredients = list()
         for ingrow in ingredients:
@@ -177,15 +191,10 @@ class RecipeSerializer(serializers.ModelSerializer):
 
         instance.tags.set(tags)
 
-    def check_ingredients(self, ingredients):
-        if not len(ingredients):
-            raise serializers.ValidationError(MESSAGES["ingredients_requared"])
-
     def create(self, validated_data):
 
         validated_data["author"] = self.context["request"].user
         recipe_ingredients = validated_data.pop("recipe_ingredients")
-        self.check_ingredients(recipe_ingredients)
         tag_list = validated_data.pop("tag_list")
         instance = Recipe.objects.create(**validated_data)
         self.add_ingredients_tags(instance, recipe_ingredients, tag_list)
@@ -204,7 +213,6 @@ class RecipeSerializer(serializers.ModelSerializer):
 
         recipe_ingredients = validated_data.pop("recipe_ingredients")
         tag_list = validated_data.pop("tag_list")
-        self.check_ingredients(recipe_ingredients)
         instance.recipe_ingredients.all().delete()
         self.add_ingredients_tags(instance, recipe_ingredients, tag_list)
         return super().update(instance, validated_data)

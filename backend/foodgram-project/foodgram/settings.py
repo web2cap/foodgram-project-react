@@ -146,5 +146,6 @@ MESSAGES = {
     "relation_not_exists": "Cannot delete. This relation doesn't exist.",
     "patch_only_author": "Update recipe can only author or admin.",
     "ingredients_requared": "Recipe ingredients required.",
+    "tags_requared" : "Recipe tags required.",
     "pdf_about": "Enjoy your meal! (c)Foodogram by web2cap github.com/web2cap",
 }
