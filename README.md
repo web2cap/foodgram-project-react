@@ -1,5 +1,13 @@
 ## Product Assistant
 
+## Admin
+http://web2cap.hopto.org/admin/
+admin / Az121212
+
+http://web2cap.hopto.org/
+admin@admin.loc / Az121212 admin access
+a@aa.aa / Az121212 user access
+
 ### Project details:
 
 SPA social network for storing and viewing recipes. Allows you to register, add and view recipes, add recipes to your favorites. Subscribe to the user. Add recipes to shopping lists and generate PDFs to buy the ingredients you need.
@@ -61,4 +69,4 @@ A description of the project methods API is available at: /api/docs/
 
 ### Author:
 
-* Pavel Koshelev (Teamlead)
+* https://github.com/web2cap
