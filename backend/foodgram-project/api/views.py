@@ -3,13 +3,14 @@ import datetime
 from django.conf import settings
 from django.db.models import Count, OuterRef, Prefetch, Subquery, Sum
 from django.shortcuts import get_object_or_404
-from rest_framework import filters, status, viewsets
+from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from ingredients.models import Ingredient
 from recipes.models import Recipe, RecipeIngredients, Tag
 from users.models import Subscription, User
+from .filters import IngredientSearchFilter
 from .permissions import (GetOrGPPDAutorized, OnlyGet, OnlyGetAutorised,
                           RegisterUserProfileOrAutorised)
 from .serializers import (IngredientSerializer, RecipeSerializer,
@@ -112,7 +113,7 @@ class IngredientViewSet(viewsets.ModelViewSet):
     queryset = Ingredient.objects.all()
     serializer_class = IngredientSerializer
     permission_classes = (OnlyGet,)
-    filter_backends = (filters.SearchFilter,)
+    filter_backends = (IngredientSearchFilter,)
     search_fields = ("^name",)
     pagination_class = None
 
