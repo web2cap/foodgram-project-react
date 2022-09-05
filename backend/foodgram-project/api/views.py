@@ -89,7 +89,10 @@ class UserViewSet(viewsets.ModelViewSet):
                     status=status.HTTP_400_BAD_REQUEST,
                 )
             me.follower.create(follow=follow_user)
-            serializer = SubscriptionSerializer(follow_user)
+            serializer = SubscriptionSerializer(
+                follow_user,
+                context={"request": request},
+            )
             return Response(serializer.data)
 
         if not me.follower.filter(follow=follow_user).exists():

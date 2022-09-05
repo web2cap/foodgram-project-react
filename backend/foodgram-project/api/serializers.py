@@ -174,15 +174,15 @@ class RecipeSerializer(serializers.ModelSerializer):
                 validation_errors["ingredients"] = MESSAGES[
                     "ingredients_unic"
                 ]
-                break  
+                break
             unic_ingredients[ingredient["ingredient"]["id"]] = True
 
         if not len(data["tag_list"]):
             validation_errors["tags"] = MESSAGES["tags_requared"]
-            
+
         if len(validation_errors):
             raise serializers.ValidationError(validation_errors)
-        return data 
+        return data
 
     def add_ingredients_tags(self, instance, ingredients, tags):
         recipe_ingredients = list()
@@ -291,7 +291,7 @@ class SubscriptionSerializer(serializers.ModelSerializer):
         return False
 
     def get_recipes_count(self, obj):
-        
+
         if hasattr(obj, "recipes_count"):
             return obj.recipes_count
         return obj.recipes.count()
