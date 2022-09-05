@@ -167,18 +167,20 @@ class RecipeSerializer(serializers.ModelSerializer):
 
         validation_errors = dict()
         if not len(data["recipe_ingredients"]):
-            validation_errors["ingredients"] = MESSAGES["ingredients_requared"]
+            validation_errors["ingredients"] = [
+                MESSAGES["ingredients_requared"]
+            ]
         unic_ingredients = dict()
         for ingredient in data["recipe_ingredients"]:
             if ingredient["ingredient"]["id"] in unic_ingredients:
-                validation_errors["ingredients"] = MESSAGES[
-                    "ingredients_unic"
+                validation_errors["ingredients"] = [
+                    MESSAGES["ingredients_unic"]
                 ]
                 break
             unic_ingredients[ingredient["ingredient"]["id"]] = True
 
         if not len(data["tag_list"]):
-            validation_errors["tags"] = MESSAGES["tags_requared"]
+            validation_errors["tags"] = [MESSAGES["tags_requared"]]
 
         if len(validation_errors):
             raise serializers.ValidationError(validation_errors)
