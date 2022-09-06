@@ -1,16 +1,6 @@
 ## Product Assistant
 
 ## Admin
-http://web2cap.hopto.org/admin/
-
-admin / Az121212
-
-
-http://web2cap.hopto.org/
-
-admin@admin.loc / Az121212 admin access
-
-a@aa.aa / Az121212 user access
 
 ![example workflow](https://github.com/web2cap/foodgram-project-react/actions/workflows/foodgram_wf.yml/badge.svg)
 
