@@ -167,7 +167,7 @@ class RecipeSerializer(serializers.ModelSerializer):
 
         validation_errors = dict()
         if not len(data["recipe_ingredients"]):
-            validation_errors["ingredients"] = [
+            validation_errors["non_field_errors"] = [
                 MESSAGES["ingredients_requared"]
             ]
         unic_ingredients = dict()
