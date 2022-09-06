@@ -173,7 +173,7 @@ class RecipeSerializer(serializers.ModelSerializer):
         unic_ingredients = dict()
         for ingredient in data["recipe_ingredients"]:
             if ingredient["ingredient"]["id"] in unic_ingredients:
-                validation_errors["ingredients"] = [
+                validation_errors["non_field_errors"] = [
                     MESSAGES["ingredients_unic"]
                 ]
                 break
