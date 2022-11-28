@@ -1,41 +1,43 @@
 version: '3.3'
 services:
 
-  frontend:
+  foodgram_frontend:
     image: web2cap/foodgram_frontend:latest
     volumes:
       - ../frontend/:/app/result_build/
 
-  db:
+  foodgram_db:
     image: postgres:13.0-alpine
+    environment:
+        POSTGRES_PASSWORD: mypassword
     volumes:
       - /var/lib/postgresql/data/
     env_file:
       - ./.env
 
-  web:
+  foodgram_web:
     image: web2cap/foodgram_web:latest
     restart: always
     volumes:
-      - static_value:/app/static/
-      - media_value:/app/media/
+      - foodgram_static_value:/app/static/
+      - foodgram_media_value:/app/media/
     depends_on:
-      - db
+      - foodgram_db
     env_file:
       - ./.env
-  nginx:
+  foodgram_nginx:
     image: nginx:1.19.3
     ports:
-      - "80:80"
+      - "1080:80"
     volumes:
       - ./nginx.conf:/etc/nginx/conf.d/default.conf
       - ../frontend/build:/usr/share/nginx/html/
       - ../docs/:/usr/share/nginx/html/api/docs/
-      - static_value:/var/html/static/
-      - media_value:/var/html/media/
+      - foodgram_static_value:/var/html/static/
+      - foodgram_media_value:/var/html/media/
     depends_on:
-      - web
+      - foodgram_web
 
 volumes:
-  static_value:
-  media_value:
+  foodgram_static_value:
+  foodgram_media_value:

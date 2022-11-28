@@ -1,7 +1,7 @@
 import os
 from pathlib import Path
 
-DEBUG = False
+DEBUG = True
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -12,8 +12,8 @@ SECRET_KEY = os.getenv(
 )
 
 
-ALLOWED_HOSTS = ["web", "localhost", "web2cap.hopto.org"]
-CSRF_TRUSTED_ORIGINS = ["http://localhost", "http://web2cap.hopto.org"]
+ALLOWED_HOSTS = ["foodgram_web", "localhost", "foodgram.zapto.org"]
+CSRF_TRUSTED_ORIGINS = ["http://localhost", "http://foodgram.zapto.org", "https://foodgram.zapto.org"]
 
 
 INSTALLED_APPS = [

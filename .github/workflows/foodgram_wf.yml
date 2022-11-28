@@ -57,25 +57,24 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           passphrase: ${{ secrets.PASSPHRASE }}
           script: |
-            sudo docker compose stop
-            sudo docker compose rm web -f
+            sudo docker compose stop foodgram_web
+            sudo docker compose rm foodgram_web -f
             sudo docker image rm ${{ secrets.DOCKER_USERNAME }}/foodgram_web:latest
-            rm .env
-            touch .env
-            echo DB_ENGINE=${{ secrets.DB_ENGINE }} >> .env
-            echo DB_NAME=${{ secrets.DB_NAME }} >> .env
-            echo DB_HOST=${{ secrets.DB_HOST }} >> .env
-            echo DB_PORT=${{ secrets.DB_PORT }} >> .env
-            echo ST_SECRET_KEY="${{ secrets.ST_SECRET_KEY }}" >> .env
-            echo ST_ADMIN_LOGIN="${{ secrets.ST_ADMIN_LOGIN }}" >> .env
-            echo ST_ADMIN_EMAIL="${{ secrets.ST_ADMIN_EMAIL }}" >> .env
-            echo ST_ADMIN_PASS="${{ secrets.ST_ADMIN_PASS }}" >> .env
-            echo DB_USER="${{ secrets.DB_USER }}" >> .env
-            echo DB_PASSWORD="${{ secrets.DB_PASSWORD }}" >> .env
+            rm foodgram/.env
+            touch foodgram/.env
+            echo DB_ENGINE=${{ secrets.DB_ENGINE }} >> foodgram/.env.env
+            echo DB_NAME=${{ secrets.DB_NAME }} >> foodgram/.env.env
+            echo DB_HOST=${{ secrets.DB_HOST }} >> foodgram/.env.env
+            echo DB_PORT=${{ secrets.DB_PORT }} >> foodgram/.env.env
+            echo ST_SECRET_KEY="${{ secrets.ST_SECRET_KEY }}" >> foodgram/.env.env
+            echo ST_ADMIN_LOGIN="${{ secrets.ST_ADMIN_LOGIN }}" >> foodgram/.env.env
+            echo ST_ADMIN_EMAIL="${{ secrets.ST_ADMIN_EMAIL }}" >> foodgram/.env.env
+            echo ST_ADMIN_PASS="${{ secrets.ST_ADMIN_PASS }}" >> foodgram/.env.env
+            echo DB_USER="${{ secrets.DB_USER }}" >> foodgram/.env.env
+            echo DB_PASSWORD="${{ secrets.DB_PASSWORD }}" >> foodgram/.env.env
             sudo docker compose up -d 
-            sudo docker compose exec web python manage.py migrate
-            sudo docker compose exec web python manage.py collectstatic --no-input 
-            sudo docker compose exec web python manage.py loaddata
+            sudo docker compose exec foodgram_web python manage.py migrate
+            sudo docker compose exec foodgram_web python manage.py collectstatic --no-input
 
   send_message:
     runs-on: ubuntu-latest
