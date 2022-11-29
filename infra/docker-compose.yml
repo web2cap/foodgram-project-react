@@ -22,7 +22,7 @@ services:
       - food_static_value:/app/static/
       - food_media_value:/app/media/
     depends_on:
-      - foodgram_db
+      - food_db
     env_file:
       - ./.env
   food_nginx:
@@ -36,7 +36,7 @@ services:
       - food_static_value:/var/html/static/
       - food_media_value:/var/html/media/
     depends_on:
-      - foodgram_web
+      - food_web
 
 volumes:
   food_static_value:
