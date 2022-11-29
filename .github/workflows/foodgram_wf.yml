@@ -74,8 +74,8 @@ jobs:
             echo DB_USER="${{ secrets.DB_USER }}" >> .env
             echo DB_PASSWORD="${{ secrets.DB_PASSWORD }}" >> .env
             docker compose up -d 
-            docker compose exec foodgram_web python manage.py migrate
-            docker compose exec foodgram_web python manage.py collectstatic --no-input
+            docker compose exec food_web python manage.py migrate
+            docker compose exec food_web python manage.py collectstatic --no-input
 
   send_message:
     runs-on: ubuntu-latest
