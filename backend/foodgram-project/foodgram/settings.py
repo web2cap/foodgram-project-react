@@ -12,7 +12,7 @@ SECRET_KEY = os.getenv(
 )
 
 
-ALLOWED_HOSTS = ["foodgram_web", "localhost", "foodgram.zapto.org"]
+ALLOWED_HOSTS = ["food_web", "localhost", "foodgram.zapto.org"]
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost",
     "http://foodgram.zapto.org",

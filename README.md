@@ -1,6 +1,9 @@
 ## Product Assistant
 
-## Admin
+## Demo
+
+
+### workflow test status:
 
 ![example workflow](https://github.com/web2cap/foodgram-project-react/actions/workflows/foodgram_wf.yml/badge.svg)
 
@@ -46,7 +49,7 @@ ST_ADMIN_EMAIL # Django superuser email
 ST_ADMIN_PASS # Django superuser password
 DB_ENGINE=django.db.backends.postgresql_psycopg2
 DB_NAME # Project database name
-DB_HOST=db
+DB_HOST=food_db
 DB_PORT=5432
 DB_USER # Database user
 DB_PASSWORD # Database user password
@@ -58,8 +61,17 @@ DB_PASSWORD # Database user password
  - Clone the repository
  - Prepere infra/.env file
  - Run infra/localstart.sh
- - Create database and role in db container
+ - Create database and role in db container run:
+ ```
+psql -Upostgres
+
+create role YOUR_DB_USER;
+create database YOUR_DB_NAME owner YOUR_DB_USER;
+alter role YOUR_DB_USER with encrypted password 'YOUR_DB_PASSWORD';
+alter role YOUR_DB_USER with login ;
+ ```
  - Run infra/localstart.sh again
+ - Project availible by http://localnost:1080
 
 
 
