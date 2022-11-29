@@ -57,7 +57,7 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           passphrase: ${{ secrets.PASSPHRASE }}
           script: |
-            cd cd foodgram_docker/foodinfra/
+            cd foodgram_docker/foodinfra/
             docker compose stop food_web
             docker compose rm food_web -f
             docker image rm ${{ secrets.DOCKER_USERNAME }}/foodgram_web:latest
