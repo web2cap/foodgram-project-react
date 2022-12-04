@@ -58,6 +58,7 @@ jobs:
           passphrase: ${{ secrets.PASSPHRASE }}
           script: |
             cd foodgram_docker/infra/
+            docker compose stop food_nginx
             docker compose stop food_web
             docker compose rm food_web -f
             docker image rm ${{ secrets.DOCKER_USERNAME }}/foodgram_web:latest
