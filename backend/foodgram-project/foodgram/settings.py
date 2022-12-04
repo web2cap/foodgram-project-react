@@ -18,7 +18,7 @@ CSRF_TRUSTED_ORIGINS = [
     "http://foodgram.zapto.org",
     "https://foodgram.zapto.org"
 ]
-
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 INSTALLED_APPS = [
     "users.apps.UsersConfig",

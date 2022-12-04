@@ -73,8 +73,6 @@ jobs:
             echo ST_ADMIN_PASS="${{ secrets.ST_ADMIN_PASS }}" >> .env
             echo DB_USER="${{ secrets.DB_USER }}" >> .env
             echo DB_PASSWORD="${{ secrets.DB_PASSWORD }}" >> .env
-            rm docker-compose.yml
-            wget https://raw.githubusercontent.com/web2cap/foodgram-project-react/master/infra/docker-compose.yml
             rm nginx.conf
             wget https://raw.githubusercontent.com/web2cap/foodgram-project-react/master/infra/nginx.conf
             docker compose up -d 
