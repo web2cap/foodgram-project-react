@@ -13,7 +13,7 @@ const ChangePassword = ({ onPasswordChange }) => {
   return <Main>
     <Container>
       <MetaTags>
-        <title>Изменить пароль</title>
+        <title>Change Password</title>
         <meta name="description" content="Продуктовый помощник - Изменить пароль" />
         <meta property="og:title" content="Изменить пароль" />
       </MetaTags>
@@ -51,7 +51,7 @@ const ChangePassword = ({ onPasswordChange }) => {
           type='submit'
           disabled={!isValid || values.new_password !== values.repeat_password}
         >
-          Изменить пароль
+          Change Password
         </Button>
       </Form>
     </Container>
