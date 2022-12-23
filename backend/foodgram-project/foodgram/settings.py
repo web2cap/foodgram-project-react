@@ -1,7 +1,7 @@
 import os
 from pathlib import Path
 
-DEBUG = True
+DEBUG = False
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -15,7 +15,6 @@ SECRET_KEY = os.getenv(
 ALLOWED_HOSTS = ["food_web", "localhost", "foodgram.zapto.org"]
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost",
-    "http://foodgram.zapto.org",
     "https://foodgram.zapto.org"
 ]
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
@@ -121,7 +120,7 @@ DJOSER = {
     "LOGIN_FIELD": "email",
 }
 
-LANGUAGE_CODE = "ru-ru"
+LANGUAGE_CODE = "en-us"
 
 TIME_ZONE = "Europe/Istanbul"
 

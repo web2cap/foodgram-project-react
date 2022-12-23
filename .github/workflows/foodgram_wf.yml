@@ -58,7 +58,6 @@ jobs:
           passphrase: ${{ secrets.PASSPHRASE }}
           script: |
             cd foodgram_docker/infra/
-            docker compose stop food_nginx
             docker compose stop food_web
             docker compose rm food_web -f
             docker image rm ${{ secrets.DOCKER_USERNAME }}/foodgram_web:latest
@@ -74,8 +73,6 @@ jobs:
             echo ST_ADMIN_PASS="${{ secrets.ST_ADMIN_PASS }}" >> .env
             echo DB_USER="${{ secrets.DB_USER }}" >> .env
             echo DB_PASSWORD="${{ secrets.DB_PASSWORD }}" >> .env
-            rm nginx.conf
-            wget https://raw.githubusercontent.com/web2cap/foodgram-project-react/master/infra/nginx.conf
             docker compose up -d 
             docker compose exec food_web python manage.py migrate
             docker compose exec food_web python manage.py collectstatic --no-input
