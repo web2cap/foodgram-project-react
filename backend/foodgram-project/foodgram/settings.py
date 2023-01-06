@@ -12,10 +12,10 @@ SECRET_KEY = os.getenv(
 )
 
 
-ALLOWED_HOSTS = ["food_web", "localhost", "foodgram.zapto.org"]
+ALLOWED_HOSTS = ["food_web", "localhost", "food.w2c.net.eu.org"]
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost",
-    "https://foodgram.zapto.org"
+    "https://food.w2c.net.eu.org"
 ]
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
